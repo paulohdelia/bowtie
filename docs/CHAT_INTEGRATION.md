@@ -221,11 +221,42 @@ Consulte o arquivo `docs/n8n-chat.md` para a lista completa de variáveis CSS di
 2. Reinicie o servidor de desenvolvimento após alterar o `.env`
 3. Verifique o console do navegador para erros
 
+### Erro 405 Not Allowed (nginx)
+
+**Causa:** O webhook do n8n está bloqueando a requisição.
+
+**Soluções:**
+
+1. **Verifique a URL do webhook:**
+   - ❌ Não use a URL do editor: `https://xxx-n8n-editor.xxx/webhook/...`
+   - ✅ Use a URL de produção: `https://xxx-n8n.xxx/webhook/...` ou `https://n8n.dominio.com/webhook/...`
+
+2. **Verifique se o workflow está ativo:**
+   - No n8n, abra o workflow do chat
+   - Verifique se o toggle "Active" está habilitado (canto superior direito)
+
+3. **Verifique o Chat Trigger node:**
+   - Abra o nó "Chat Trigger" no workflow
+   - Confirme que "Public" está habilitado
+   - Copie a URL correta do webhook exibida no nó
+
+4. **Teste o webhook manualmente:**
+   ```bash
+   curl -X POST https://sua-url-n8n/webhook/seu-id/chat \
+     -H "Content-Type: application/json" \
+     -d '{"chatInput": "teste", "sessionId": "test-123"}'
+   ```
+
+5. **Verifique CORS no n8n:**
+   - Se necessário, configure allowed origins no n8n
+   - Em Settings → Security → CORS
+
 ### Webhook não responde
 
 1. Confirme que o workflow n8n está ativo
 2. Teste a URL do webhook diretamente no navegador
 3. Verifique os logs do n8n para erros
+4. Confirme que o Chat Trigger está configurado corretamente
 
 ### Estilos não aplicam
 
