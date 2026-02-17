@@ -4,6 +4,7 @@ import BowTieContainer from './src/components/bowtie/BowTieContainer';
 import ActionTable from './src/components/layout/ActionTable';
 import LoadingSpinner from './src/components/common/LoadingSpinner';
 import ErrorMessage from './src/components/common/ErrorMessage';
+import N8nChat from './src/components/common/N8nChat';
 import { useBowTieData } from './src/hooks/useBowTieData';
 import { useSprintsData } from './src/hooks/useSprintsData';
 import { useBowTieCalculations } from './src/hooks/useBowTieCalculations';
@@ -104,6 +105,9 @@ const BowTieApp = () => {
         availablePeople={availablePeople}
         detailsRef={detailsRef}
       />
+
+      {/* Chat Assistente n8n */}
+      <N8nChat />
     </div>
   );
 };

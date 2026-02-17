@@ -48,16 +48,20 @@ See `.env.example` for reference.
 - **Bottleneck Detection**: Automatically identifies the stage with highest accumulated impact (the "trava")
 - **Heatmap System**: Visual gradient based on impact scores (High=3, Medium=2, Low=1)
 - **Sprint Planning**: Actions are mapped to sprint cycles for team workflow visualization
+- **AI Assistant**: Integrated n8n chat widget for conversational assistance (see `docs/CHAT_INTEGRATION.md`)
 
 ## Architecture
 
 The codebase follows a **modular React architecture** with clear separation of concerns:
 
 ```
-index.jsx                    # Main app (73 lines) - composition only
+index.jsx                    # Main app - composition only
 src/
 ├── components/
-│   ├── common/             # Reusable UI components (badges)
+│   ├── common/             # Reusable UI components
+│   │   ├── ChatButton.jsx         # Floating button to open assistant
+│   │   ├── ChatWidget.jsx         # Sidebar chat panel with n8n iframe
+│   │   └── ...                    # Other common components (badges, etc)
 │   ├── layout/             # Structural components (Header, ActionTable)
 │   └── bowtie/             # Domain-specific (BowTieStage, BowTieContainer)
 ├── hooks/                  # Business logic
@@ -177,6 +181,7 @@ All documentation is organized in the `/docs` folder:
 - `docs/STAGES_AND_MICROSTEPS.md` - **Official reference** for all 8 stages and 41 micro-steps
 - `docs/ARCHITECTURE.md` - Deep dive into patterns and design decisions
 - `docs/QUICK_START.md` - Practical guide for adding features
+- `docs/CHAT_INTEGRATION.md` - n8n chat assistant integration guide
 - `docs/dev-docs.md` - Original technical documentation, includes future backend schema
 - `docs/INSTALL.md` - Installation and setup guide
 - `docs/API_INTEGRATION.md` - API integration documentation
