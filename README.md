@@ -48,8 +48,11 @@ npm run lint
 - **Visualização BowTie**: Funil de receita em formato de gravata borboleta (8 etapas)
 - **Detecção de Travas**: Identifica automaticamente o maior gargalo (bottleneck)
 - **Heatmap de Impacto**: Gradiente visual baseado em scores de impacto
-- **Filtros por Sprint**: Visualize ações por ciclo de trabalho
-- **Tabela Detalhada**: Lista completa de ações com filtros avançados
+- **Filtros por Sprint**: Visualize ações por ciclo de trabalho (inicia automaticamente na sprint atual)
+- **Tabela Detalhada**: Lista completa de ações com filtros avançados (status, pessoa)
+- **🤖 Assistente IA**: Chat integrado com n8n para classificar problemas e criar ações
+  - Auto-refresh: Dados atualizam automaticamente após registro
+  - Contexto preservado durante atualização
 
 ### 🎯 Conceitos do Domínio
 
@@ -105,6 +108,8 @@ Para mais detalhes, consulte:
 | Vite | 5.4 | Build tool & dev server |
 | Tailwind CSS | 3.4 | Estilização |
 | Lucide React | 0.344 | Ícones |
+| @n8n/chat | 1.9.0 | Chat widget integrado |
+| Docker + nginx | - | Deploy em produção |
 
 ## 📁 Estrutura do Projeto
 
@@ -112,11 +117,22 @@ Para mais detalhes, consulte:
 bowtie-ferraz-piai/
 ├── src/                    # Código fonte modular
 │   ├── components/         # Componentes React organizados por tipo
+│   │   ├── common/         # N8nChat.jsx, LoadingSpinner, etc
+│   │   ├── layout/         # Header, ActionTable
+│   │   └── bowtie/         # BowTieStage, BowTieContainer
 │   ├── hooks/              # Custom hooks para lógica de negócio
+│   │   ├── useBowTieData.js       # Com refetch()
+│   │   ├── useSprintsData.js      # Sprint ativa
+│   │   ├── useFilters.js          # Auto-init com sprint
+│   │   └── useBowTieCalculations.js
+│   ├── services/           # API calls e integrações
+│   ├── styles/             # n8n-chat-custom.css
 │   └── utils/              # Funções utilitárias e constantes
 ├── docs/                   # Documentação do projeto
 │   ├── ARCHITECTURE.md     # Arquitetura detalhada
 │   ├── QUICK_START.md      # Guia prático
+│   ├── CHAT_INTEGRATION.md # Integração do chat n8n
+│   ├── DEPLOY.md           # Guia de deploy (Easypanel/Docker)
 │   ├── dev-docs.md         # Documentação técnica
 │   ├── API_INTEGRATION.md  # Integração com API
 │   ├── INSTALL.md          # Guia de instalação
@@ -124,13 +140,15 @@ bowtie-ferraz-piai/
 ├── agents/                 # System prompts para agentes de IA
 │   ├── README.md           # Índice de agentes disponíveis
 │   └── action-classifier-prompt.md  # Agente classificador de ações
-├── index.jsx               # Componente raiz (73 linhas)
+├── Dockerfile              # Multi-stage build para produção
+├── nginx.conf              # Configuração nginx para SPA
+├── index.jsx               # Componente raiz (integra chat)
 ├── main.jsx                # Entry point
 ├── index.html              # HTML template
 ├── index.css               # Estilos globais
 ├── vite.config.js          # Configuração do Vite
 ├── tailwind.config.js      # Configuração do Tailwind
-├── package.json            # Dependências
+├── package.json            # Dependências (inclui @n8n/chat)
 ├── CLAUDE.md               # Guia de desenvolvimento
 └── README.md               # Este arquivo
 ```
@@ -157,6 +175,8 @@ Ver **docs/archive/REFACTORING_SUMMARY.md** para detalhes completos.
 - **docs/STAGES_AND_MICROSTEPS.md** - ⭐ **Documentação oficial** das 8 etapas e 41 micro-etapas
 - **docs/ARCHITECTURE.md** - Arquitetura, padrões e design decisions
 - **docs/QUICK_START.md** - Guia prático para adicionar features
+- **docs/CHAT_INTEGRATION.md** - Integração do chat n8n (setup, auto-refresh, troubleshooting)
+- **docs/DEPLOY.md** - Deploy em produção (Easypanel, Docker, Build Arguments)
 - **docs/dev-docs.md** - Documentação técnica completa (lógica de negócio, schema backend)
 - **docs/INSTALL.md** - Guia de instalação e configuração
 - **docs/API_INTEGRATION.md** - Documentação de integração com API
@@ -205,13 +225,16 @@ Classifica automaticamente inputs do usuário em ações estruturadas:
 
 ## 🚧 Próximos Passos
 
-- [ ] Integração com backend (substituir dados mock)
+- [x] ~~Integração com backend~~ ✅ Implementado via n8n webhooks
+- [x] ~~Chat assistant~~ ✅ Integrado com n8n (@n8n/chat)
+- [x] ~~Auto-refresh de dados~~ ✅ Implementado com MutationObserver
+- [x] ~~Deploy em produção~~ ✅ Docker + nginx + Easypanel
 - [ ] Implementar Action Classifier Agent em produção
 - [ ] Testes automatizados (Jest + React Testing Library)
 - [ ] Migração para TypeScript (opcional)
 - [ ] CI/CD pipeline
 - [ ] Error boundaries
-- [ ] Loading states
+- [ ] Analytics de uso do chat
 
 ## 📝 Convenções de Código
 

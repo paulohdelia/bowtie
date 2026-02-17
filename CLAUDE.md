@@ -32,10 +32,16 @@ The application uses environment variables for configuration. **Never commit the
 **Required variables:**
 - `VITE_API_ENDPOINT` - Main webhook URL for BowTie data
 - `VITE_API_SPRINTS_ENDPOINT` - Webhook URL for sprints data
+- `VITE_CHAT_WEBHOOK_URL` - n8n chat assistant webhook URL
 
 **Optional variables:**
 - `VITE_API_CACHE_TTL` - Cache duration in milliseconds (default: 300000)
 - `VITE_API_TIMEOUT` - Request timeout in milliseconds (default: 10000)
+
+**Production Build (Easypanel/Docker):**
+- All `VITE_*` variables must be configured as **Build Arguments** (not Environment Variables)
+- Vite processes these at build time, not runtime
+- See `docs/DEPLOY.md` for deployment guide
 
 See `.env.example` for reference.
 
@@ -48,7 +54,13 @@ See `.env.example` for reference.
 - **Bottleneck Detection**: Automatically identifies the stage with highest accumulated impact (the "trava")
 - **Heatmap System**: Visual gradient based on impact scores (High=3, Medium=2, Low=1)
 - **Sprint Planning**: Actions are mapped to sprint cycles for team workflow visualization
-- **AI Assistant**: Integrated n8n chat widget for conversational assistance (see `docs/CHAT_INTEGRATION.md`)
+- **Default Sprint Filter**: Automatically initializes with current active sprint on app load
+- **AI Assistant**: Integrated n8n chat widget with auto-refresh on registration completion
+  - Floating button for easy access
+  - Conversational problem classification
+  - Automatic data refresh when "Registro concluído!" is detected
+  - Context preservation during refresh (chat stays open)
+  - See `docs/CHAT_INTEGRATION.md` for details
 
 ## Architecture
 
@@ -59,25 +71,42 @@ index.jsx                    # Main app - composition only
 src/
 ├── components/
 │   ├── common/             # Reusable UI components
-│   │   ├── ChatButton.jsx         # Floating button to open assistant
-│   │   ├── ChatWidget.jsx         # Sidebar chat panel with n8n iframe
+│   │   ├── N8nChat.jsx            # n8n chat widget with auto-refresh
+│   │   ├── LoadingSpinner.jsx     # Loading indicator
+│   │   ├── ErrorMessage.jsx       # Error display
 │   │   └── ...                    # Other common components (badges, etc)
 │   ├── layout/             # Structural components (Header, ActionTable)
 │   └── bowtie/             # Domain-specific (BowTieStage, BowTieContainer)
 ├── hooks/                  # Business logic
-│   ├── useBowTieData.js           # Data layer (currently mocks, ready for API)
+│   ├── useBowTieData.js           # Data layer with refetch capability
+│   ├── useSprintsData.js          # Sprint data and active sprint detection
 │   ├── useBowTieCalculations.js   # Score calculations and bottleneck detection
-│   └── useFilters.js              # Filter logic and table data processing
+│   └── useFilters.js              # Filter logic, auto-init with active sprint
+├── styles/
+│   └── n8n-chat-custom.css        # Chat widget customization (brand colors, textarea fix)
+├── services/
+│   ├── apiService.js              # API calls for BowTie data
+│   └── sprintsService.js          # API calls for sprints data
 └── utils/
-    ├── constants.js        # Configuration (weights, status, categories)
-    └── calculations.js     # Pure functions for score calculations
+    ├── constants.js               # Configuration (weights, status, categories)
+    ├── calculations.js            # Pure functions for score calculations
+    └── dataTransformer.js         # API data transformation and normalization
 ```
 
 **Data Flow:**
-1. `useBowTieData()` → provides stages and actions
-2. `useBowTieCalculations()` → computes scores and identifies bottleneck
-3. `useFilters()` → manages sprint/micro-step filters
-4. Components receive processed data via props
+1. `useBowTieData()` → provides stages, actions, and `refetch()` function
+2. `useSprintsData()` → provides sprints list and active sprint object
+3. `useFilters()` → manages sprint/micro-step filters, auto-initializes with active sprint
+4. `useBowTieCalculations()` → computes scores and identifies bottleneck
+5. `N8nChat` → detects completion, triggers `refetch()`, preserves chat context
+6. Components receive processed data via props
+
+**Chat Auto-Refresh Flow:**
+1. User sends problem via chat → n8n processes and responds
+2. MutationObserver detects "Registro concluído!" message
+3. Triggers `onRegistrationComplete()` callback → calls `refetch()`
+4. `refetch()` bypasses cache and fetches fresh data from API
+5. React re-renders with new data → table updates, chat stays open
 
 ## Critical Business Logic
 
@@ -95,8 +124,13 @@ src/
 
 ### Filter Rules
 - **Sprint Filter**: Shows only actions for selected sprint
+  - **Auto-initialization**: Defaults to current active sprint on app load
+  - Uses `activeSprint.name` (object property) to set initial value
+  - Preserves user's manual filter changes via `useRef` flag
 - **"Visão Geral" (All Sprints)**: Excludes `done` and `cancelled` actions from risk calculations (but they appear in table history)
 - **Micro-step Filter**: Available only when a stage is active/expanded
+- **Status Filter**: Filter by action status (backlog, todo, in_progress, done, cancelled)
+- **Person Filter**: Filter by responsible person
 
 ## Key Patterns
 
@@ -181,7 +215,8 @@ All documentation is organized in the `/docs` folder:
 - `docs/STAGES_AND_MICROSTEPS.md` - **Official reference** for all 8 stages and 41 micro-steps
 - `docs/ARCHITECTURE.md` - Deep dive into patterns and design decisions
 - `docs/QUICK_START.md` - Practical guide for adding features
-- `docs/CHAT_INTEGRATION.md` - n8n chat assistant integration guide
+- `docs/CHAT_INTEGRATION.md` - n8n chat assistant integration guide (auto-refresh, customization)
+- `docs/DEPLOY.md` - Production deployment guide (Easypanel, Docker, Build Arguments)
 - `docs/dev-docs.md` - Original technical documentation, includes future backend schema
 - `docs/INSTALL.md` - Installation and setup guide
 - `docs/API_INTEGRATION.md` - API integration documentation
@@ -201,7 +236,9 @@ All documentation is organized in the `/docs` folder:
 - **Build Tool**: Vite 5.4
 - **Styling**: Tailwind CSS 3.4
 - **Icons**: Lucide React
+- **Chat**: @n8n/chat 1.9.0 (official n8n chat widget)
 - **Language**: JavaScript (JSX)
+- **Deployment**: Docker + nginx (multi-stage build)
 
 ## Notes
 
