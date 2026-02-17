@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Filter, Calendar, ChevronDown, CheckSquare, Square, Target, User } from 'lucide-react';
+import { Filter, Calendar, ChevronDown, CheckSquare, Square, Target, User, ArrowUpDown, ArrowUp, ArrowDown, RotateCcw } from 'lucide-react';
 import StatusBadge from '../common/StatusBadge';
 import SprintBadge from '../common/SprintBadge';
 import CategoryBadge from '../common/CategoryBadge';
 import { STATUS_CONFIG } from '../../utils/constants';
+import { useSorting } from '../../hooks/useSorting';
 
 const ActionTable = ({
   tableData,
@@ -27,6 +28,31 @@ const ActionTable = ({
   const [isMicroFilterOpen, setIsMicroFilterOpen] = useState(false);
   const microFilterRef = useRef(null);
   const detailsRef = useRef(null);
+
+  // Sorting hook
+  const { sortedData, sortConfig, requestSort, resetSort } = useSorting(tableData);
+
+  // Check if any filters or sorting are active
+  const hasActiveFiltersOrSort = useMemo(() => {
+    return (
+      selectedSprint !== 'all' ||
+      selectedStatus !== 'all' ||
+      selectedPerson !== 'all' ||
+      selectedMicroFilters.length > 0 ||
+      activeStage !== null ||
+      sortConfig.key !== null
+    );
+  }, [selectedSprint, selectedStatus, selectedPerson, selectedMicroFilters, activeStage, sortConfig]);
+
+  // Reset all filters and sorting
+  const handleResetAll = () => {
+    setSelectedSprint('all');
+    setSelectedStatus('all');
+    setSelectedPerson('all');
+    setSelectedMicroFilters([]);
+    setActiveStage(null);
+    resetSort();
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -53,6 +79,28 @@ const ActionTable = ({
 
   // Sprints disponíveis vêm como prop (apenas as que têm ações)
   const availableSprints = sprintsWithActions || [];
+
+  // Helper to render sortable column header
+  const SortableHeader = ({ label, sortKey, className = "" }) => {
+    const isSorted = sortConfig.key === sortKey;
+    const direction = isSorted ? sortConfig.direction : null;
+
+    return (
+      <th
+        className={`p-4 font-semibold cursor-pointer hover:bg-[#111] transition-colors select-none group ${className}`}
+        onClick={() => requestSort(sortKey)}
+      >
+        <div className="flex items-center gap-1.5">
+          <span>{label}</span>
+          <span className="text-gray-600 group-hover:text-gray-400 transition-colors">
+            {!isSorted && <ArrowUpDown size={12} />}
+            {isSorted && direction === 'asc' && <ArrowUp size={12} className="text-[#E30613]" />}
+            {isSorted && direction === 'desc' && <ArrowDown size={12} className="text-[#E30613]" />}
+          </span>
+        </div>
+      </th>
+    );
+  };
 
   return (
     <div ref={detailsRef} className="w-full max-w-[1600px] mx-auto px-4 mb-20">
@@ -198,10 +246,24 @@ const ActionTable = ({
               </div>
             </div>
 
+            {/* Botão Reset Filtros - aparece apenas quando há filtros/ordenação ativos */}
+            {hasActiveFiltersOrSort && (
+              <div className="flex flex-col items-end justify-end">
+                <button
+                  onClick={handleResetAll}
+                  className="flex items-center gap-2 px-3 py-2 rounded text-xs font-bold uppercase tracking-wide border border-[#333] bg-[#0a0a0a] text-gray-400 hover:border-[#E30613] hover:text-white transition-all group"
+                  title="Limpar todos os filtros e ordenação"
+                >
+                  <RotateCcw size={14} className="group-hover:rotate-180 transition-transform duration-300" />
+                  <span className="hidden xl:inline">Limpar</span>
+                </button>
+              </div>
+            )}
+
             <div className="text-right pl-6 border-l border-[#333] hidden md:block">
               <span className="text-xs uppercase text-gray-500 block">Itens Listados</span>
               <span className="text-2xl font-bold text-white">
-                {tableData.length}
+                {sortedData.length}
               </span>
             </div>
           </div>
@@ -212,24 +274,24 @@ const ActionTable = ({
           <table className="w-full text-left border-collapse relative">
             <thead className="sticky top-0 z-10">
               <tr className="bg-[#050505] text-[10px] uppercase tracking-wider text-gray-500 border-b border-[#222]">
-                <th className="p-4 font-semibold whitespace-nowrap">Sprint</th>
-                <th className="p-4 font-semibold whitespace-nowrap">Macro Etapa</th>
-                <th className="p-4 font-semibold whitespace-nowrap">Status</th>
-                <th className="p-4 font-semibold min-w-[200px]">Ação</th>
-                <th className="p-4 font-semibold text-center whitespace-nowrap">Prazo</th>
-                <th className="p-4 font-semibold whitespace-nowrap">Responsável</th>
-                <th className="p-4 font-semibold whitespace-nowrap">Identificado Por</th>
-                <th className="p-4 font-semibold whitespace-nowrap">Categoria</th>
-                <th className="p-4 font-semibold whitespace-nowrap">Micro Etapa</th>
-                <th className="p-4 font-semibold min-w-[200px]">Fato</th>
-                <th className="p-4 font-semibold min-w-[200px]">Causa</th>
-                <th className="p-4 font-semibold text-center whitespace-nowrap">Impacto</th>
-                <th className="p-4 font-semibold text-center whitespace-nowrap">Esforço</th>
-                <th className="p-4 font-semibold min-w-[250px]">Comentários</th>
+                <SortableHeader label="Sprint" sortKey="sprint" className="whitespace-nowrap" />
+                <SortableHeader label="Macro Etapa" sortKey="stageTitle" className="whitespace-nowrap" />
+                <SortableHeader label="Status" sortKey="status" className="whitespace-nowrap" />
+                <SortableHeader label="Ação" sortKey="action" className="min-w-[200px]" />
+                <SortableHeader label="Prazo" sortKey="deadline" className="text-center whitespace-nowrap" />
+                <SortableHeader label="Responsável" sortKey="responsible" className="whitespace-nowrap" />
+                <SortableHeader label="Identificado Por" sortKey="identifiedBy" className="whitespace-nowrap" />
+                <SortableHeader label="Categoria" sortKey="category" className="whitespace-nowrap" />
+                <SortableHeader label="Micro Etapa" sortKey="microStepName" className="whitespace-nowrap" />
+                <SortableHeader label="Fato" sortKey="fact" className="min-w-[200px]" />
+                <SortableHeader label="Causa" sortKey="cause" className="min-w-[200px]" />
+                <SortableHeader label="Impacto" sortKey="impact" className="text-center whitespace-nowrap" />
+                <SortableHeader label="Esforço" sortKey="effort" className="text-center whitespace-nowrap" />
+                <SortableHeader label="Comentários" sortKey="comments" className="min-w-[250px]" />
               </tr>
             </thead>
             <tbody className="text-sm text-gray-300 divide-y divide-[#222]">
-              {tableData.map((action, idx) => (
+              {sortedData.map((action, idx) => (
                 <tr key={`${action.id}-${idx}`} className="hover:bg-[#111] group transition-colors">
                   <td className="p-4 whitespace-nowrap bg-[#0a0a0a]/50">
                     <SprintBadge sprint={action.sprint} />
@@ -282,7 +344,7 @@ const ActionTable = ({
                 </tr>
               ))}
 
-              {tableData.length === 0 && (
+              {sortedData.length === 0 && (
                 <tr>
                   <td colSpan="14" className="p-16 text-center text-gray-600 italic">
                     <div className="flex flex-col items-center gap-3">
@@ -292,18 +354,13 @@ const ActionTable = ({
                         Não há ações mapeadas para
                         <strong className="text-gray-400 mx-1">{selectedSprint === 'all' ? 'qualquer período' : selectedSprint}</strong>
                         {activeStage ? 'nesta etapa específica' : 'em todo o funil'}.
-                        <br />Tente ajustar os filtros de Micro-Etapas.
+                        <br />Tente ajustar os filtros ou ordenação.
                       </p>
                       <button
-                        onClick={() => {
-                          setSelectedSprint('all');
-                          setSelectedStatus('all');
-                          setSelectedPerson('all');
-                          setActiveStage(null);
-                          setSelectedMicroFilters([]);
-                        }}
-                        className="text-xs text-[#E30613] hover:underline mt-2 font-bold uppercase tracking-wide border border-[#333] px-4 py-2 rounded hover:bg-[#111]"
+                        onClick={handleResetAll}
+                        className="text-xs text-[#E30613] hover:underline mt-2 font-bold uppercase tracking-wide border border-[#333] px-4 py-2 rounded hover:bg-[#111] flex items-center gap-2"
                       >
+                        <RotateCcw size={14} />
                         Limpar todos os filtros
                       </button>
                     </div>

@@ -55,6 +55,13 @@ See `.env.example` for reference.
 - **Heatmap System**: Visual gradient based on impact scores (High=3, Medium=2, Low=1)
 - **Sprint Planning**: Actions are mapped to sprint cycles for team workflow visualization
 - **Default Sprint Filter**: Automatically initializes with current active sprint on app load
+- **Table Sorting**: Click any column header to sort data (ascending/descending/reset)
+  - Smart sorting for dates, priorities (Impact/Effort), and text
+  - Visual indicators show active sort direction
+  - See `docs/SORTING_FEATURE.md` for details
+- **Smart Reset Button**: Appears only when filters or sorting are active
+  - One-click reset to default state
+  - Resets all filters (sprint, status, person, micro-steps, stage) and sorting
 - **AI Assistant**: Integrated n8n chat widget with auto-refresh on registration completion
   - Floating button for easy access
   - Conversational problem classification
@@ -81,7 +88,8 @@ src/
 │   ├── useBowTieData.js           # Data layer with refetch capability
 │   ├── useSprintsData.js          # Sprint data and active sprint detection
 │   ├── useBowTieCalculations.js   # Score calculations and bottleneck detection
-│   └── useFilters.js              # Filter logic, auto-init with active sprint
+│   ├── useFilters.js              # Filter logic, auto-init with active sprint
+│   └── useSorting.js              # Table sorting logic with multi-type support
 ├── styles/
 │   └── n8n-chat-custom.css        # Chat widget customization (brand colors, textarea fix)
 ├── services/
@@ -215,6 +223,7 @@ All documentation is organized in the `/docs` folder:
 - `docs/STAGES_AND_MICROSTEPS.md` - **Official reference** for all 8 stages and 41 micro-steps
 - `docs/ARCHITECTURE.md` - Deep dive into patterns and design decisions
 - `docs/QUICK_START.md` - Practical guide for adding features
+- `docs/SORTING_FEATURE.md` - Table sorting and filter reset functionality guide
 - `docs/CHAT_INTEGRATION.md` - n8n chat assistant integration guide (auto-refresh, customization)
 - `docs/DEPLOY.md` - Production deployment guide (Easypanel, Docker, Build Arguments)
 - `docs/dev-docs.md` - Original technical documentation, includes future backend schema
