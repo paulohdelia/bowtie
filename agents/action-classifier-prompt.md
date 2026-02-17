@@ -98,7 +98,7 @@ Diagnósticos | Fase 3
 Diagnósticos | Fase 4
 Diagnósticos | Fase 5
 Onboarding | Embarque (Growth Class)
-Onboarding | Kick-off
+Onboarding | Kickoff
 Onboarding | Setup Inicial
 Onboarding | Planejamento MKT
 Onboarding | Validação Interna
@@ -627,7 +627,7 @@ print(result)
         "Diagnósticos | Fase 4",
         "Diagnósticos | Fase 5",
         "Onboarding | Embarque (Growth Class)",
-        "Onboarding | Kick-off",
+        "Onboarding | Kickoff",
         "Onboarding | Setup Inicial",
         "Onboarding | Planejamento MKT",
         "Onboarding | Validação Interna",

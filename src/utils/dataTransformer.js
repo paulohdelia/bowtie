@@ -124,7 +124,7 @@ const normalizeSprint = (sprint) => {
  * @returns {string} Data no formato YYYY-MM-DD
  */
 const normalizeDate = (prazo) => {
-  if (!prazo || prazo.trim() === '') return '';
+  if (!prazo || prazo.toString().trim() === '') return '';
 
   const normalized = prazo.toString().trim();
 
@@ -156,8 +156,8 @@ const normalizeDate = (prazo) => {
  * @returns {Object} Objeto normalizado
  */
 const normalizeItem = (item) => {
-  // Gerar ID único se não existir
-  const id = item.id && item.id.trim() !== ''
+  // Gerar ID único se não existir (ID pode ser string ou número)
+  const id = item.id != null && item.id.toString().trim() !== ''
     ? item.id.toString()
     : `action-${item.row_number || Math.random().toString(36).substr(2, 9)}`;
 

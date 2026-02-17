@@ -57,8 +57,6 @@ export const MICRO_STEP_MAPPING = {
   'embarque (growth class)': 'Embarque (Growth Class)',
   'embarque': 'Embarque (Growth Class)',
   'growth class': 'Embarque (Growth Class)',
-  'kick-off': 'Kick-off',
-  'kickoff': 'Kick-off',
   'setup inicial': 'Setup Inicial',
   'setup': 'Setup Inicial',
   'planejamento mkt': 'Planejamento MKT',

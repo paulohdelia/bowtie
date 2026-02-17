@@ -92,7 +92,7 @@ O BowTie é composto por **8 etapas principais** que representam a jornada do cl
 
 #### Micro-Etapas (7):
 1. **Embarque (Growth Class)** - Treinamento inicial e nivelamento
-2. **Kick-off** - Início oficial do projeto
+2. **Kickoff** - Início oficial do projeto
 3. **Setup Inicial** - Configurações iniciais
 4. **Planejamento MKT** - Planejamento de marketing
 5. **Validação Interna** - Revisão interna do planejamento

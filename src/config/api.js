@@ -32,7 +32,7 @@ export const STAGE_CONFIG = {
     id: 'onboarding',
     height: 'h-56',
     subtitle: '(Executar)',
-    microSteps: ['Embarque (Growth Class)', 'Kick-off', 'Setup Inicial', 'Planejamento MKT', 'Validação Interna', 'Apresentação Cliente', 'Encerramento']
+    microSteps: ['Embarque (Growth Class)', 'Kickoff', 'Setup Inicial', 'Planejamento MKT', 'Validação Interna', 'Apresentação Cliente', 'Encerramento']
   },
   'Implementações': {
     id: 'implementacoes',
