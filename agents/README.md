@@ -9,8 +9,9 @@ Esta pasta contém system prompts e configurações para agentes de IA que auxil
 **Modelo:** GPT-4 / GPT-4 Turbo
 **Propósito:** Analisa input de usuário e estrutura em formato de ação do BowTie
 
-**Entrada:** Descrição livre de problema/oportunidade
+**Entrada:** Nome do usuário + Descrição livre de problema/oportunidade
 **Saída:** JSON estruturado com:
+- Identificado Por (nome e sobrenome)
 - Fato
 - Causa
 - Ação
@@ -19,14 +20,27 @@ Esta pasta contém system prompts e configurações para agentes de IA que auxil
 - Esforço (Alto/Médio/Baixo)
 - Comentário
 - Macro Etapa
-- Micro Etapa
+- Micro Etapa (formato "Macro | Micro")
+- Aprovado (null/true/false)
+
+**Fluxo de Trabalho:**
+1. **Classificação Inicial**: Agente analisa o problema e retorna JSON estruturado com `aprovado: null`
+2. **Feedback do Usuário**: Usuário aprova ou solicita ajustes
+3. **Processamento de Aprovação**: Agente retorna JSON atualizado com `aprovado: true` ou `false`
 
 **Exemplo de Uso:**
 ```javascript
+// 1ª interação: Classificação inicial
 const result = await classifyAction(
   "SDRs com taxa de resposta de 5% em emails frios"
 );
-// Retorna JSON estruturado pronto para inserir no sistema
+// Retorna JSON estruturado: { ..., aprovado: null }
+
+// 2ª interação: Processamento de aprovação
+const approved = await classifyAction(
+  "Aprovado! Pode seguir."
+);
+// Retorna JSON atualizado: { ..., aprovado: true }
 ```
 
 ---

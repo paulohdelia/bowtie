@@ -2,6 +2,12 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
+    "identificado_por": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 100,
+      "description": "Nome e sobrenome da pessoa que identificou o problema"
+    },
     "fato": {
       "type": "string",
       "minLength": 10,
@@ -52,6 +58,20 @@
       "maxLength": 1000,
       "description": "Contexto adicional, dependências ou observações importantes"
     },
+    "macro_etapa": {
+      "type": "string",
+      "enum": [
+        "Pré-Venda",
+        "Aquisição",
+        "Compromisso",
+        "Diagnósticos",
+        "Onboarding",
+        "Implementações",
+        "Ongoing",
+        "Monetização"
+      ],
+      "description": "Macro etapa do BowTie onde o problema ocorre"
+    },
     "micro_etapa": {
       "type": "string",
       "enum": [
@@ -98,10 +118,15 @@
         "Monetização | Contrato na Rua"
       ],
       "description": "Micro-etapa do BowTie no formato 'Macro Etapa | Micro Etapa'"
+    },
+    "aprovado": {
+      "type": ["boolean", "null"],
+      "description": "Indica se a classificação foi aprovada pelo usuário. Valores: null (ainda não avaliado), true (aprovado), false (rejeitado/ajustado)."
     }
   },
   "additionalProperties": false,
   "required": [
+    "identificado_por",
     "fato",
     "causa",
     "acao",
@@ -109,6 +134,8 @@
     "impacto",
     "esforco",
     "comentario",
-    "micro_etapa"
+    "macro_etapa",
+    "micro_etapa",
+    "aprovado"
   ]
 }
