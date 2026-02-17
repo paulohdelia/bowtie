@@ -33,8 +33,11 @@
   --chat--toggle--active--background: #A0040E;
 
   /* Input área */
+  --chat--textarea--height: 50px;
+  --chat--textarea--max-height: 150px;
   --chat--input--background: #2a2a2a;
   --chat--input--text-color: #ffffff;
+  --chat--input--line-height: 1.5;
   --chat--footer--background: #1a1a1a;
 
   /* Posicionamento */
@@ -81,5 +84,38 @@
 }
 
 .n8n-chat .n8n-chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #E30613;
+}
+
+/* Fix textarea crescendo infinitamente */
+#n8n-chat textarea,
+.n8n-chat textarea,
+.n8n-chat-input textarea {
+  min-height: 50px !important;
+  max-height: 150px !important;
+  overflow-y: auto !important;
+  resize: none !important;
+  line-height: 1.5 !important;
+}
+
+/* Scrollbar do textarea */
+#n8n-chat textarea::-webkit-scrollbar,
+.n8n-chat textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+#n8n-chat textarea::-webkit-scrollbar-track,
+.n8n-chat textarea::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+#n8n-chat textarea::-webkit-scrollbar-thumb,
+.n8n-chat textarea::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+#n8n-chat textarea::-webkit-scrollbar-thumb:hover,
+.n8n-chat textarea::-webkit-scrollbar-thumb:hover {
   background: #E30613;
 }

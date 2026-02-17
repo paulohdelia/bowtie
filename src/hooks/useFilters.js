@@ -1,10 +1,21 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 
 export const useFilters = (activeSprint, bowTieData) => {
   const [selectedSprint, setSelectedSprint] = useState('all');
   const [selectedMicroFilters, setSelectedMicroFilters] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedPerson, setSelectedPerson] = useState('all');
+  const hasInitialized = useRef(false);
+
+  // Inicializar com a sprint ativa quando os dados carregarem
+  useEffect(() => {
+    // activeSprint é um OBJETO com propriedade 'name'
+    if (!hasInitialized.current && activeSprint && activeSprint.name) {
+      console.log('[useFilters] Inicializando com sprint ativa:', activeSprint.name);
+      setSelectedSprint(activeSprint.name);
+      hasInitialized.current = true;
+    }
+  }, [activeSprint]);
 
   // Extrair lista única de responsáveis de todas as ações
   const availablePeople = useMemo(() => {
