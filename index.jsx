@@ -15,7 +15,7 @@ const BowTieApp = () => {
   const detailsRef = useRef(null);
 
   // Hooks de dados e lógica de negócio
-  const { bowTieData, loading, error } = useBowTieData();
+  const { bowTieData, loading, error, refetch } = useBowTieData();
   const { activeSprint, sprintsWithActions, loading: loadingSprints } = useSprintsData(bowTieData);
   const {
     selectedSprint,
@@ -107,7 +107,7 @@ const BowTieApp = () => {
       />
 
       {/* Chat Assistente n8n */}
-      <N8nChat />
+      <N8nChat onRegistrationComplete={refetch} />
     </div>
   );
 };

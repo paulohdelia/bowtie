@@ -16,6 +16,8 @@ const normalizeStatus = (status) => {
     'todo': 'todo',
     'a fazer': 'todo',
     'fazer': 'todo',
+    'a iniciar': 'todo',
+    'iniciar': 'todo',
     'in_progress': 'in_progress',
     'in progress': 'in_progress',
     'em progresso': 'in_progress',

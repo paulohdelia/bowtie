@@ -9,18 +9,21 @@ let cacheTimestamp = null;
 
 /**
  * Hook para gerenciar dados do BowTie vindos da API REST
- * @returns {{ bowTieData: Array, loading: boolean, error: string|null }}
+ * @returns {{ bowTieData: Array, loading: boolean, error: string|null, refetch: Function }}
  */
 export const useBowTieData = () => {
   const [bowTieData, setBowTieData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     const loadData = async () => {
-      // Verificar cache
+      // Verificar cache (ignorar se for um refresh forçado)
       const now = Date.now();
-      if (cachedData && cacheTimestamp && (now - cacheTimestamp < API_CONFIG.cacheTTL)) {
+      const isForceRefresh = refreshTrigger > 0;
+
+      if (!isForceRefresh && cachedData && cacheTimestamp && (now - cacheTimestamp < API_CONFIG.cacheTTL)) {
         console.log('[useBowTieData] Usando dados em cache');
         setBowTieData(cachedData);
         setLoading(false);
@@ -28,7 +31,7 @@ export const useBowTieData = () => {
       }
 
       try {
-        console.log('[useBowTieData] Carregando dados da API...');
+        console.log('[useBowTieData] Carregando dados da API...', isForceRefresh ? '(refresh forçado)' : '');
         setLoading(true);
         setError(null);
 
@@ -59,7 +62,13 @@ export const useBowTieData = () => {
     };
 
     loadData();
-  }, []);
+  }, [refreshTrigger]);
 
-  return { bowTieData, loading, error };
+  // Função para forçar refresh dos dados
+  const refetch = () => {
+    console.log('[useBowTieData] Refresh solicitado - invalidando cache');
+    setRefreshTrigger(prev => prev + 1);
+  };
+
+  return { bowTieData, loading, error, refetch };
 };
