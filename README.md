@@ -121,6 +121,9 @@ bowtie-ferraz-piai/
 │   ├── API_INTEGRATION.md  # Integração com API
 │   ├── INSTALL.md          # Guia de instalação
 │   └── archive/            # Documentação histórica/arquivada
+├── agents/                 # System prompts para agentes de IA
+│   ├── README.md           # Índice de agentes disponíveis
+│   └── action-classifier-prompt.md  # Agente classificador de ações
 ├── index.jsx               # Componente raiz (73 linhas)
 ├── main.jsx                # Entry point
 ├── index.html              # HTML template
@@ -151,6 +154,7 @@ Ver **docs/archive/REFACTORING_SUMMARY.md** para detalhes completos.
 - **CLAUDE.md** - Guia para Claude Code e desenvolvedores
 
 ### Documentação Técnica (docs/)
+- **docs/STAGES_AND_MICROSTEPS.md** - ⭐ **Documentação oficial** das 8 etapas e 41 micro-etapas
 - **docs/ARCHITECTURE.md** - Arquitetura, padrões e design decisions
 - **docs/QUICK_START.md** - Guia prático para adicionar features
 - **docs/dev-docs.md** - Documentação técnica completa (lógica de negócio, schema backend)
@@ -186,9 +190,23 @@ src/utils/minhaUtil.js
 
 Ver **docs/QUICK_START.md** para exemplos práticos.
 
+## 🤖 Agentes de IA
+
+O projeto inclui **system prompts para agentes de IA** que automatizam tarefas do BowTie:
+
+### Action Classifier Agent (GPT-4)
+Classifica automaticamente inputs do usuário em ações estruturadas:
+- **Input:** "SDRs com 5% de taxa de resposta em emails"
+- **Output:** JSON com fato, causa, ação, categoria, impacto, esforço, etapa
+
+**Documentação:** `agents/action-classifier-prompt.md`
+
+> 💡 Perfeito para acelerar o cadastro de ações e manter consistência na classificação
+
 ## 🚧 Próximos Passos
 
 - [ ] Integração com backend (substituir dados mock)
+- [ ] Implementar Action Classifier Agent em produção
 - [ ] Testes automatizados (Jest + React Testing Library)
 - [ ] Migração para TypeScript (opcional)
 - [ ] CI/CD pipeline

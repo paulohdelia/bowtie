@@ -6,6 +6,7 @@ Esta pasta contém toda a documentação técnica do **Ferraz Piai BowTie Applic
 
 ### Arquitetura e Padrões
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Arquitetura completa, padrões de design e decisões técnicas
+- **[STAGES_AND_MICROSTEPS.md](./STAGES_AND_MICROSTEPS.md)** - **Documentação oficial** de todas as 8 etapas e 41 micro-etapas do BowTie
 - **[dev-docs.md](./dev-docs.md)** - Documentação técnica original, inclui schema do backend futuro
 
 ### Guias Práticos
@@ -30,6 +31,7 @@ Estes arquivos são mantidos para referência histórica, mas não refletem o es
 
 | Preciso... | Arquivo |
 |------------|---------|
+| Ver todas as etapas e micro-etapas | [STAGES_AND_MICROSTEPS.md](./STAGES_AND_MICROSTEPS.md) ⭐ |
 | Entender a arquitetura | [ARCHITECTURE.md](./ARCHITECTURE.md) |
 | Adicionar uma feature | [QUICK_START.md](./QUICK_START.md) |
 | Configurar o projeto | [INSTALL.md](./INSTALL.md) |

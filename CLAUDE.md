@@ -174,11 +174,16 @@ When replacing mocks with API:
 All documentation is organized in the `/docs` folder:
 
 **Active Documentation (docs/):**
+- `docs/STAGES_AND_MICROSTEPS.md` - **Official reference** for all 8 stages and 41 micro-steps
 - `docs/ARCHITECTURE.md` - Deep dive into patterns and design decisions
 - `docs/QUICK_START.md` - Practical guide for adding features
 - `docs/dev-docs.md` - Original technical documentation, includes future backend schema
 - `docs/INSTALL.md` - Installation and setup guide
 - `docs/API_INTEGRATION.md` - API integration documentation
+
+**AI Agents (agents/):**
+- `agents/action-classifier-prompt.md` - GPT-4 system prompt to classify user input into structured BowTie actions
+- `agents/README.md` - Index of available AI agents and usage guide
 
 **Archived Documentation (docs/archive/):**
 - Historical documentation and temporary debugging files

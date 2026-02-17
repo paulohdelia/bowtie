@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "fato": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 500,
+      "description": "Descrição objetiva do problema ou situação observada"
+    },
+    "causa": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 500,
+      "description": "Causa raiz identificada do problema"
+    },
+    "acao": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 500,
+      "description": "Plano de ação específico e acionável para resolver o problema"
+    },
+    "categoria": {
+      "type": "string",
+      "enum": [
+        "Pessoas",
+        "Processos",
+        "Tecnologia"
+      ],
+      "description": "Categoria da ação: Pessoas (equipe, cultura), Processos (workflow, metodologia) ou Tecnologia (ferramentas, sistemas)"
+    },
+    "impacto": {
+      "type": "string",
+      "enum": [
+        "Alto",
+        "Médio",
+        "Baixo"
+      ],
+      "description": "Nível de impacto no negócio ou receita"
+    },
+    "esforco": {
+      "type": "string",
+      "enum": [
+        "Alto",
+        "Médio",
+        "Baixo"
+      ],
+      "description": "Nível de esforço necessário para executar a ação"
+    },
+    "comentario": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Contexto adicional, dependências ou observações importantes"
+    },
+    "micro_etapa": {
+      "type": "string",
+      "enum": [
+        "Pré-Venda | Prospect",
+        "Pré-Venda | Tentativa de Contato",
+        "Pré-Venda | Conectado",
+        "Pré-Venda | Reunião Agendada",
+        "Aquisição | Validação",
+        "Aquisição | Proposta Enviada",
+        "Aquisição | Em Negociação",
+        "Aquisição | Contrato na Rua",
+        "Compromisso | Venda Fechada",
+        "Diagnósticos | Kickoff Interno",
+        "Diagnósticos | Kickoff",
+        "Diagnósticos | Fase 2",
+        "Diagnósticos | Fase 3",
+        "Diagnósticos | Fase 4",
+        "Diagnósticos | Fase 5",
+        "Onboarding | Embarque (Growth Class)",
+        "Onboarding | Kick-off",
+        "Onboarding | Setup Inicial",
+        "Onboarding | Planejamento MKT",
+        "Onboarding | Validação Interna",
+        "Onboarding | Apresentação Cliente",
+        "Onboarding | Encerramento",
+        "Implementações | Setup Imp.",
+        "Implementações | Revisão pré-Go Live",
+        "Implementações | Go Live",
+        "Implementações | 1º Check-in (Interno)",
+        "Implementações | 1º Check-in (Revisão)",
+        "Implementações | Execução",
+        "Implementações | Replanejamento",
+        "Implementações | Check-in Mensal",
+        "Implementações | Encerramento",
+        "Ongoing | DO (Execução)",
+        "Ongoing | CHECK (Qualidade)",
+        "Ongoing | ACT (Otimizações)",
+        "Ongoing | PLAN (Replanejamento)",
+        "Ongoing | Check-in (Revisão)",
+        "Ongoing | Check-in (Cliente)",
+        "Monetização | Validação",
+        "Monetização | Proposta Enviada",
+        "Monetização | Em Negociação",
+        "Monetização | Contrato na Rua"
+      ],
+      "description": "Micro-etapa do BowTie no formato 'Macro Etapa | Micro Etapa'"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "fato",
+    "causa",
+    "acao",
+    "categoria",
+    "impacto",
+    "esforco",
+    "comentario",
+    "micro_etapa"
+  ]
+}

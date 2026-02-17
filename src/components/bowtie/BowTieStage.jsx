@@ -18,7 +18,7 @@ const BowTieStage = ({
     background: isActive
       ? '#0a0a0a'
       : `linear-gradient(to bottom, rgba(227, 6, 19, ${intensity * 0.6}) 0%, rgba(10, 10, 10, 1) 100%)`,
-    borderColor: isActive ? '#E30613' : `rgba(227, 6, 19, ${intensity > 0 ? intensity + 0.2 : 0.2})`
+    borderColor: isActive ? '#E30613' : `rgba(227, 6, 19, ${intensity > 0 ? Math.max(intensity * 0.8 + 0.3, 0.4) : 0.4})`
   };
 
   return (
