@@ -1,24 +1,55 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 
-export const useFilters = (activeSprint) => {
+export const useFilters = (activeSprint, bowTieData) => {
   const [selectedSprint, setSelectedSprint] = useState('all');
   const [selectedMicroFilters, setSelectedMicroFilters] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedPerson, setSelectedPerson] = useState('all');
 
-  // Usar sprint ativa automaticamente quando disponível
-  useEffect(() => {
-    if (activeSprint) {
-      setSelectedSprint(activeSprint.name);
-    }
-  }, [activeSprint]);
+  // Extrair lista única de responsáveis de todas as ações
+  const availablePeople = useMemo(() => {
+    if (!bowTieData || bowTieData.length === 0) return [];
+
+    const peopleSet = new Set();
+    bowTieData.forEach(stage => {
+      stage.microSteps.forEach(microStep => {
+        microStep.actions.forEach(action => {
+          if (action.responsible && action.responsible.trim() !== '') {
+            peopleSet.add(action.responsible.trim());
+          }
+        });
+      });
+    });
+
+    return Array.from(peopleSet).sort();
+  }, [bowTieData]);
 
   const filterActionsBySprint = (actions) => {
-    // "Todas as ações" - sem filtro nenhum
+    let filtered = actions;
+
+    // Filtro por sprint
     if (selectedSprint === 'all') {
-      return actions;
+      // Todas as ações
+      filtered = actions;
+    } else if (selectedSprint === 'backlog') {
+      // Apenas ações sem sprint (backlog)
+      filtered = actions.filter(a => !a.sprint || a.sprint === '');
+    } else {
+      // Sprint específica
+      filtered = actions.filter(a => a.sprint === selectedSprint);
     }
 
-    // Filtrar por sprint específica
-    return actions.filter(a => a.sprint === selectedSprint);
+    // Filtro por status
+    if (selectedStatus !== 'all') {
+      filtered = filtered.filter(a => a.status === selectedStatus);
+    }
+
+    // Filtro por pessoa
+    if (selectedPerson !== 'all') {
+      filtered = filtered.filter(a => a.responsible === selectedPerson);
+    }
+
+    return filtered;
   };
 
   const toggleMicroFilter = (microName) => {
@@ -40,6 +71,11 @@ export const useFilters = (activeSprint) => {
     setSelectedSprint,
     selectedMicroFilters,
     setSelectedMicroFilters,
+    selectedStatus,
+    setSelectedStatus,
+    selectedPerson,
+    setSelectedPerson,
+    availablePeople,
     filterActionsBySprint,
     toggleMicroFilter,
     clearMicroFilters

@@ -14,6 +14,10 @@ const Header = ({ selectedSprint, sprints }) => {
       return 'Todas as sprints';
     }
 
+    if (selectedSprint === 'backlog') {
+      return 'Sem sprint definida';
+    }
+
     if (!sprintInfo) {
       return 'Datas não disponíveis';
     }
@@ -29,7 +33,7 @@ const Header = ({ selectedSprint, sprints }) => {
       </h1>
       <div className="w-24 h-1 bg-[#E30613]"></div>
       <p className="mt-4 text-gray-500 text-xs uppercase tracking-widest flex items-center gap-2">
-        {selectedSprint === 'all' ? 'Todas as Ações' : `Foco Atual: ${selectedSprint}`}
+        {selectedSprint === 'all' ? 'Todas as Ações' : selectedSprint === 'backlog' ? 'Backlog' : `Foco Atual: ${selectedSprint}`}
         <span className="w-px h-3 bg-gray-700 mx-1"></span>
         <span className="flex items-center gap-1 text-gray-400">
           <Calendar size={10} />

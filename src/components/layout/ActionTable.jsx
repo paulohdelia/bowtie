@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Filter, Calendar, ChevronDown, CheckSquare, Square, Target } from 'lucide-react';
+import { Filter, Calendar, ChevronDown, CheckSquare, Square, Target, User } from 'lucide-react';
 import StatusBadge from '../common/StatusBadge';
 import SprintBadge from '../common/SprintBadge';
 import CategoryBadge from '../common/CategoryBadge';
+import { STATUS_CONFIG } from '../../utils/constants';
 
 const ActionTable = ({
   tableData,
@@ -16,7 +17,12 @@ const ActionTable = ({
   setActiveStage,
   filterActionsBySprint,
   sprintsWithActions,
-  activeSprint
+  activeSprint,
+  selectedStatus,
+  setSelectedStatus,
+  selectedPerson,
+  setSelectedPerson,
+  availablePeople
 }) => {
   const [isMicroFilterOpen, setIsMicroFilterOpen] = useState(false);
   const microFilterRef = useRef(null);
@@ -139,10 +145,53 @@ const ActionTable = ({
                   onChange={(e) => setSelectedSprint(e.target.value)}
                   className="bg-[#0a0a0a] text-white border border-[#333] group-hover:border-[#E30613] rounded pl-4 pr-8 py-2 text-sm font-bold uppercase tracking-wide focus:outline-none focus:ring-1 focus:ring-[#E30613] transition-all cursor-pointer min-w-[200px]"
                 >
-                  <option value="all">Todas as Ações</option>
+                  <option value="all">Visão Geral</option>
+                  <option value="backlog">Backlog</option>
                   {availableSprints.map(sprint => (
                     <option key={sprint.name} value={sprint.name}>
                       {sprint.name}{sprint.isActive ? ' (Ativa)' : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Filtro de Status */}
+            <div className="flex flex-col items-end">
+              <label className="text-[10px] uppercase text-gray-500 font-bold mb-1 tracking-widest flex items-center gap-1">
+                <CheckSquare size={10} /> Status
+              </label>
+              <div className="relative group">
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className="bg-[#0a0a0a] text-white border border-[#333] group-hover:border-[#E30613] rounded pl-4 pr-8 py-2 text-sm font-bold uppercase tracking-wide focus:outline-none focus:ring-1 focus:ring-[#E30613] transition-all cursor-pointer min-w-[180px]"
+                >
+                  <option value="all">Todos</option>
+                  {Object.entries(STATUS_CONFIG).map(([value, config]) => (
+                    <option key={value} value={value}>
+                      {config.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Filtro de Pessoa */}
+            <div className="flex flex-col items-end">
+              <label className="text-[10px] uppercase text-gray-500 font-bold mb-1 tracking-widest flex items-center gap-1">
+                <User size={10} /> Responsável
+              </label>
+              <div className="relative group">
+                <select
+                  value={selectedPerson}
+                  onChange={(e) => setSelectedPerson(e.target.value)}
+                  className="bg-[#0a0a0a] text-white border border-[#333] group-hover:border-[#E30613] rounded pl-4 pr-8 py-2 text-sm font-bold uppercase tracking-wide focus:outline-none focus:ring-1 focus:ring-[#E30613] transition-all cursor-pointer min-w-[180px]"
+                >
+                  <option value="all">Todos</option>
+                  {availablePeople.map(person => (
+                    <option key={person} value={person}>
+                      {person}
                     </option>
                   ))}
                 </select>
@@ -248,6 +297,8 @@ const ActionTable = ({
                       <button
                         onClick={() => {
                           setSelectedSprint('all');
+                          setSelectedStatus('all');
+                          setSelectedPerson('all');
                           setActiveStage(null);
                           setSelectedMicroFilters([]);
                         }}

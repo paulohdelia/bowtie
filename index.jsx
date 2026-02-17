@@ -21,9 +21,14 @@ const BowTieApp = () => {
     setSelectedSprint,
     selectedMicroFilters,
     setSelectedMicroFilters,
+    selectedStatus,
+    setSelectedStatus,
+    selectedPerson,
+    setSelectedPerson,
+    availablePeople,
     filterActionsBySprint,
     toggleMicroFilter
-  } = useFilters(activeSprint);
+  } = useFilters(activeSprint, bowTieData);
 
   const { stageScores, maxImpactScore, bottleneckStageId } = useBowTieCalculations(
     bowTieData,
@@ -92,6 +97,11 @@ const BowTieApp = () => {
         filterActionsBySprint={filterActionsBySprint}
         sprintsWithActions={sprintsWithActions}
         activeSprint={activeSprint}
+        selectedStatus={selectedStatus}
+        setSelectedStatus={setSelectedStatus}
+        selectedPerson={selectedPerson}
+        setSelectedPerson={setSelectedPerson}
+        availablePeople={availablePeople}
         detailsRef={detailsRef}
       />
     </div>
