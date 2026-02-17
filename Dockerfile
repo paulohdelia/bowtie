@@ -12,7 +12,19 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build the app
+# Accept build arguments for Vite environment variables
+ARG VITE_API_ENDPOINT
+ARG VITE_API_SPRINTS_ENDPOINT
+ARG VITE_API_CACHE_TTL
+ARG VITE_API_TIMEOUT
+
+# Convert ARGs to ENVs so Vite can access them during build
+ENV VITE_API_ENDPOINT=$VITE_API_ENDPOINT
+ENV VITE_API_SPRINTS_ENDPOINT=$VITE_API_SPRINTS_ENDPOINT
+ENV VITE_API_CACHE_TTL=$VITE_API_CACHE_TTL
+ENV VITE_API_TIMEOUT=$VITE_API_TIMEOUT
+
+# Build the app (Vite will embed these env vars in the bundle)
 RUN npm run build
 
 # Production stage

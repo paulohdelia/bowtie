@@ -9,21 +9,42 @@
 3. Conecte seu repositório
 4. Selecione **Build Method: Dockerfile**
 
-### 2. Variáveis de Ambiente
+### 2. Variáveis de Ambiente (Build Arguments)
 
-Configure as seguintes variáveis no Easypanel:
+**⚠️ CRÍTICO**: Vite processa variáveis em **build time**! Configure como **Build Arguments** no Easypanel.
 
+No Easypanel, vá em **Settings → Build** e adicione:
+
+**Build Arguments** (não Environment Variables):
 ```
-VITE_API_ENDPOINT=https://ferrazpiai-n8n-editor.uyk8ty.easypanel.host/webhook/bowtie
-VITE_API_SPRINTS_ENDPOINT=https://ferrazpiai-n8n-editor.uyk8ty.easypanel.host/webhook/bowtie-sprints
+VITE_API_ENDPOINT=<sua_url_webhook_bowtie>
+VITE_API_SPRINTS_ENDPOINT=<sua_url_webhook_sprints>
 ```
 
-**⚠️ IMPORTANTE**: Como o Vite processa variáveis de ambiente em **build time**, você precisa configurar as variáveis no Easypanel **antes** de fazer o build.
+> Use os valores do seu arquivo `.env` local
+
+**Opcionais** (com valores padrão):
+```
+VITE_API_CACHE_TTL=300000
+VITE_API_TIMEOUT=10000
+```
+
+**Por que Build Arguments e não Environment Variables?**
+- Vite embute as variáveis no código durante o build (não em runtime)
+- Build Arguments são passados para `docker build --build-arg`
+- Environment Variables só estão disponíveis em runtime (tarde demais para Vite)
 
 ### 3. Configuração da Porta
 
-- O container expõe a porta **80**
-- Configure o Easypanel para mapear a porta 80
+O Dockerfile expõe a porta **80** (nginx padrão).
+
+**No Easypanel**:
+1. Vá em **Settings → Domains** ou **Networking**
+2. O Easypanel normalmente detecta a porta 80 automaticamente
+3. Se precisar configurar manualmente:
+   - **Container Port**: `80`
+   - **Protocol**: `HTTP`
+4. Configure seu domínio/subdomain para apontar para o app
 
 ### 4. Deploy
 
@@ -67,6 +88,16 @@ Faça o commit dos arquivos e push para o repositório. O Easypanel vai:
 - Isso não deve mais acontecer com o nginx.conf configurado
 - Se persistir, verifique se o nginx.conf foi copiado corretamente
 
+### Erro: "Unexpected token '<', "<!doctype "... is not valid JSON"
+**Causa**: As variáveis de ambiente não foram configuradas durante o build.
+**Solução**:
+1. Verifique se você configurou as variáveis como **Build Arguments** (não Environment Variables)
+2. No Easypanel: Settings → Build → Build Arguments
+3. Faça um **rebuild completo** após adicionar as variáveis
+4. Verifique os logs do build para confirmar que as variáveis foram passadas
+
 ### Variáveis de ambiente não funcionam
 - Lembre-se: Vite processa variáveis em **build time**
-- Faça rebuild após alterar variáveis no Easypanel
+- Configure como **Build Arguments** no Easypanel
+- Faça rebuild após alterar variáveis
+- Se configuradas como Environment Variables, mova para Build Arguments

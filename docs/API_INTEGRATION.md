@@ -204,13 +204,13 @@ Em caso de erro, se houver dados em cache, eles serão exibidos com uma mensagem
 Para testar o endpoint manualmente:
 
 ```bash
-curl https://ferrazpiai-n8n-editor.uyk8ty.easypanel.host/webhook/bowtie
+curl ${VITE_API_ENDPOINT}
 ```
 
 Ou no DevTools Console:
 
 ```javascript
-fetch('https://ferrazpiai-n8n-editor.uyk8ty.easypanel.host/webhook/bowtie')
+fetch('${VITE_API_ENDPOINT}')
   .then(r => r.json())
   .then(console.log)
 ```
@@ -306,7 +306,7 @@ No Console do DevTools, você verá:
 ### Dados não aparecem
 1. Abra o DevTools Console (F12)
 2. Verifique se há erros de requisição
-3. Teste o endpoint manualmente: `curl https://ferrazpiai-n8n-editor.uyk8ty.easypanel.host/webhook/bowtie`
+3. Teste o endpoint manualmente: `curl ${VITE_API_ENDPOINT}`
 4. Verifique se o endpoint está retornando um array JSON válido
 
 ### Erro de CORS
