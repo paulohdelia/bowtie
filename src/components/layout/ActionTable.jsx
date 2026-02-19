@@ -72,10 +72,30 @@ const ActionTable = ({
     const stage = bowTieData.find(s => s.id === activeStage);
     if (!stage) return [];
 
-    return stage.microSteps.map(step => {
-      const count = filterActionsBySprint(step.actions).length;
-      return { name: step.name, count };
-    });
+    if (stage.isCategorized && stage.categories) {
+      // Categorized stage: flatten categories
+      const options = [];
+      stage.categories.forEach(category => {
+        (category.microSteps || []).forEach(step => {
+          const count = filterActionsBySprint(step.actions || []).length;
+          options.push({
+            name: `${category.name} | ${step.name}`,
+            displayName: step.name,
+            category: category.name,
+            count
+          });
+        });
+      });
+      return options;
+    } else if (stage.microSteps) {
+      // Simple stage
+      return stage.microSteps.map(step => {
+        const count = filterActionsBySprint(step.actions || []).length;
+        return { name: step.name, count };
+      });
+    }
+
+    return [];
   }, [activeStage, bowTieData, filterActionsBySprint]);
 
   // Sprints disponíveis vêm como prop (apenas as que têm ações)
@@ -336,7 +356,9 @@ const ActionTable = ({
                   <td className="p-4 whitespace-nowrap">
                     <CategoryBadge category={action.category} />
                   </td>
-                  <td className="p-4 text-xs uppercase font-bold text-gray-500">{action.microStepName}</td>
+                  <td className="p-4 text-xs uppercase font-bold text-gray-500">
+                    {action.categoryName ? `${action.categoryName} | ${action.microStepName}` : action.microStepName}
+                  </td>
                   <td className="p-4 max-w-xs truncate group-hover:whitespace-normal" title={action.fact}>{action.fact}</td>
                   <td className="p-4 max-w-xs truncate group-hover:whitespace-normal" title={action.cause}>{action.cause}</td>
                   <td className="p-4 text-center">

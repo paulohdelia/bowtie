@@ -106,13 +106,27 @@ export const filterSprintsWithActions = (sprints, bowTieData) => {
   // Extrair todos os nomes de sprint das ações
   const sprintNamesInActions = new Set();
   bowTieData.forEach(stage => {
-    stage.microSteps.forEach(microStep => {
-      microStep.actions.forEach(action => {
-        if (action.sprint && action.sprint !== '') {
-          sprintNamesInActions.add(action.sprint);
-        }
+    if (stage.isCategorized && stage.categories) {
+      // Categorized stage
+      stage.categories.forEach(category => {
+        (category.microSteps || []).forEach(microStep => {
+          (microStep.actions || []).forEach(action => {
+            if (action.sprint && action.sprint !== '') {
+              sprintNamesInActions.add(action.sprint);
+            }
+          });
+        });
       });
-    });
+    } else if (stage.microSteps) {
+      // Simple stage
+      stage.microSteps.forEach(microStep => {
+        (microStep.actions || []).forEach(action => {
+          if (action.sprint && action.sprint !== '') {
+            sprintNamesInActions.add(action.sprint);
+          }
+        });
+      });
+    }
   });
 
   // Filtrar sprints que têm ações

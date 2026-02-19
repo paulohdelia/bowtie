@@ -38,11 +38,14 @@ const BowTieStage = ({
       <div
         onClick={() => onStageClick(stage.id)}
         style={{
-          width: getStageWidth(isActive, stage.microSteps.length),
+          width: getStageWidth(isActive, stage.isCategorized
+            ? (stage.categories?.reduce((max, cat) => Math.max(max, cat.microSteps.length), 0) || 0)
+            : (stage.microSteps?.length || 0)
+          ),
           ...bgStyle
         }}
         className={`
-          ${stage.height}
+          ${isActive && stage.isCategorized ? 'h-[500px]' : stage.height}
           border
           cursor-pointer group relative overflow-hidden
           transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]
@@ -101,54 +104,103 @@ const BowTieStage = ({
           </div>
         </div>
 
-        {/* Estado ABERTO (Micro - Horizontal) */}
-        <div
-          className={`
-            absolute inset-0 flex flex-row w-full h-full transition-all duration-500 bg-[#0a0a0a]
-            ${isActive ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10 pointer-events-none'}
-          `}
-        >
-          {/* Título Macro Esquerda */}
-          <div className="w-[220px] shrink-0 h-full border-r border-[#222] flex flex-col justify-center items-center p-4 bg-[#0F0F0F] relative">
-            <h3 className="text-xl md:text-2xl font-black uppercase text-[#E30613] text-center leading-none mb-2 mt-4">{stage.title}</h3>
-            {stage.subtitle && <span className="text-xs text-gray-500 uppercase tracking-widest text-center">{stage.subtitle}</span>}
-            <div className="mt-auto pt-4 w-full">
-              <div className="text-[10px] uppercase text-gray-600 text-center mb-1">
-                {selectedSprint === 'all' ? 'Total Geral' : selectedSprint}
+        {/* Estado ABERTO - Categorized (3 Vertical Rows) */}
+        {isActive && stage.isCategorized && (
+          <div className="absolute inset-0 flex w-full h-full bg-[#0a0a0a]">
+            {/* Título Macro Esquerda */}
+            <div className="w-[220px] shrink-0 flex flex-col justify-center items-center p-6 border-r border-[#222] bg-[#0F0F0F]">
+              <h3 className="text-xl font-bold text-[#E30613] mb-2">{stage.title}</h3>
+              <div className="text-xs text-gray-400">
+                Total: {totalFilteredBacklog}
               </div>
-              <div className="text-3xl font-black text-white text-center leading-none">{totalFilteredBacklog}</div>
+              <div className="text-xs text-gray-500">
+                {selectedSprint === 'all' ? 'Visão Geral' : selectedSprint}
+              </div>
             </div>
-          </div>
 
-          {/* Cards Micro Etapas Direita */}
-          <div className="flex-1 h-full flex items-center p-4 overflow-hidden">
-            <div className="flex flex-row gap-3 h-full w-full">
-              {stageMetrics.map((step, idx) => {
-                return (
-                  <div
-                    key={idx}
-                    className="flex flex-col justify-between p-3 bg-[#161616] border border-[#222] hover:border-[#E30613] rounded transition-all group/card h-full min-w-[180px] w-[180px]"
-                  >
-                    <div className="flex justify-between items-start">
-                      <span className="text-xs font-medium text-gray-300 group-hover/card:text-white mb-2 leading-tight block uppercase tracking-wide">
-                        {step.name}
-                      </span>
-                    </div>
-
-                    <div className="mt-auto">
-                      <div className="flex justify-between items-center text-[10px] text-gray-500 uppercase mb-1">
-                        <span>Ações</span>
-                      </div>
-                      <div className={`text-2xl font-bold ${step.count > 0 ? 'text-[#E30613]' : 'text-gray-700'}`}>
-                        {step.count}
-                      </div>
-                    </div>
+            {/* Categories area - 3 vertical rows */}
+            <div className="flex-1 flex flex-col gap-0">
+              {stageMetrics.categories?.map((category, idx) => (
+                <div
+                  key={category.name}
+                  className={`flex-1 flex flex-col px-4 py-3 ${idx < stageMetrics.categories.length - 1 ? 'border-b border-gray-800' : ''}`}
+                >
+                  {/* Category label */}
+                  <div className="text-xs uppercase tracking-wider font-semibold text-gray-500 mb-2">
+                    {category.name}
                   </div>
-                );
-              })}
+
+                  {/* Horizontal micro-step cards */}
+                  {category.microSteps && category.microSteps.length > 0 ? (
+                    <div className="flex flex-row gap-3 overflow-x-auto pb-2">
+                      {category.microSteps.map(step => (
+                        <div
+                          key={step.name}
+                          className="flex flex-col justify-between p-3 bg-[#161616] border border-[#222] hover:border-[#E30613] rounded transition-all h-full min-w-[140px] w-[140px] shrink-0"
+                        >
+                          <span className="text-xs font-medium text-gray-300">{step.name}</span>
+                          <div className={`text-2xl font-bold ${step.count > 0 ? 'text-[#E30613]' : 'text-gray-700'}`}>
+                            {step.count}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-xs text-gray-600 italic">
+                      Nenhuma micro-etapa definida
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Estado ABERTO - Simple (Horizontal) */}
+        {isActive && !stage.isCategorized && (
+          <div className="absolute inset-0 flex flex-row w-full h-full bg-[#0a0a0a]">
+            {/* Título Macro Esquerda */}
+            <div className="w-[220px] shrink-0 h-full border-r border-[#222] flex flex-col justify-center items-center p-4 bg-[#0F0F0F] relative">
+              <h3 className="text-xl md:text-2xl font-black uppercase text-[#E30613] text-center leading-none mb-2 mt-4">{stage.title}</h3>
+              {stage.subtitle && <span className="text-xs text-gray-500 uppercase tracking-widest text-center">{stage.subtitle}</span>}
+              <div className="mt-auto pt-4 w-full">
+                <div className="text-[10px] uppercase text-gray-600 text-center mb-1">
+                  {selectedSprint === 'all' ? 'Total Geral' : selectedSprint}
+                </div>
+                <div className="text-3xl font-black text-white text-center leading-none">{totalFilteredBacklog}</div>
+              </div>
+            </div>
+
+            {/* Cards Micro Etapas Direita */}
+            <div className="flex-1 h-full flex items-center p-4 overflow-hidden">
+              <div className="flex flex-row gap-3 h-full w-full">
+                {stageMetrics.microSteps?.map((step, idx) => {
+                  return (
+                    <div
+                      key={idx}
+                      className="flex flex-col justify-between p-3 bg-[#161616] border border-[#222] hover:border-[#E30613] rounded transition-all group/card h-full min-w-[140px] w-[140px]"
+                    >
+                      <div className="flex justify-between items-start">
+                        <span className="text-xs font-medium text-gray-300 group-hover/card:text-white mb-2 leading-tight block uppercase tracking-wide">
+                          {step.name}
+                        </span>
+                      </div>
+
+                      <div className="mt-auto">
+                        <div className="flex justify-between items-center text-[10px] text-gray-500 uppercase mb-1">
+                          <span>Ações</span>
+                        </div>
+                        <div className={`text-2xl font-bold ${step.count > 0 ? 'text-[#E30613]' : 'text-gray-700'}`}>
+                          {step.count}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Linhas Conectoras */}

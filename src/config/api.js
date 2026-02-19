@@ -6,47 +6,95 @@ export const API_CONFIG = {
 };
 
 export const STAGE_CONFIG = {
+  'Exposição': {
+    id: 'exposicao',
+    height: 'h-96',  // MAIOR (simétrico com Expansão)
+    microSteps: []
+  },
   'Pré-Venda': {
     id: 'prevenda',
-    height: 'h-80',
-    microSteps: ['Prospect', 'Tentativa de Contato', 'Conectado', 'Reunião Agendada']
+    height: 'h-80',  // MÉDIA-ALTA (simétrico com Retenção)
+    microSteps: ['Prospect', 'Tentativa de Contato', 'Conectado', 'Reunião Agendada', 'Reunião realizada']
   },
   'Aquisição': {
     id: 'aquisicao',
-    height: 'h-64',
-    microSteps: ['Validação', 'Proposta Enviada', 'Em Negociação', 'Contrato na Rua']
+    height: 'h-64',  // MÉDIA-BAIXA (simétrico com Onboarding)
+    microSteps: ['Validação', 'Proposta Enviada', 'Em Negociação', 'Contrato na Rua', 'Assinatura de contrato']
   },
-  'Compromisso': {
-    id: 'compromisso',
-    height: 'h-40',
+  'Commit': {
+    id: 'commit',
+    height: 'h-40',  // MENOR - Nó central
     isKnot: true,
-    microSteps: ['Venda Fechada']
-  },
-  'Diagnósticos': {
-    id: 'diagnostico',
-    height: 'h-48',
-    subtitle: '(Saber)',
-    microSteps: ['Kickoff Interno', 'Kickoff', 'Fase 2', 'Fase 3', 'Fase 4', 'Fase 5']
+    microSteps: [
+      'Assinatura do Contrato',
+      'V4 Marketing',
+      'Mensagem Próximos Passos (Vendedor)',
+      'Revisão da venda (Gerente)',
+      'Atribuição de projeto (Squad)',
+      'Call Handover Comercial para Ops (Coordenador)',
+      'Atribuição do time operacional (Coordenador)'
+    ]
   },
   'Onboarding': {
     id: 'onboarding',
-    height: 'h-56',
-    subtitle: '(Executar)',
-    microSteps: ['Embarque (Growth Class)', 'Kickoff', 'Setup Inicial', 'Planejamento MKT', 'Validação Interna', 'Apresentação Cliente', 'Encerramento']
+    height: 'h-64',  // MÉDIA-BAIXA (simétrico com Aquisição)
+    isCategorized: true,
+    categories: {
+      'SABER': [
+        'Revisão do V4 Marketing',
+        'Boas-vindas (Gerente - Grupo Whats)',
+        'Kickoff',
+        'Coleta de Acessos'
+      ],
+      'TER': [],
+      'EXECUTAR': [
+        'Revisão do V4 Marketing',
+        'Boas-vindas (Gerente - Grupo Whats)',
+        'Kickoff',
+        'Coleta de Acessos',
+        'Planejamento Interno',
+        'Planejamento Revisão',
+        'Apresentação Planejamento',
+        'Encerramento (CSAT)'
+      ]
+    }
   },
-  'Implementações': {
-    id: 'implementacoes',
-    height: 'h-64',
-    microSteps: ['Setup Imp.', 'Revisão pré-Go Live', 'Go Live', '1º Check-in (Interno)', '1º Check-in (Revisão)', 'Execução', 'Replanejamento', 'Check-in Mensal', 'Encerramento']
+  'Retenção': {
+    id: 'retencao',
+    height: 'h-80',  // MÉDIA-ALTA (simétrico com Pré-Venda)
+    isCategorized: true,
+    categories: {
+      'SABER': [
+        'Fase 2',
+        'Fase 3',
+        'Fase 4',
+        'Fase 5',
+        'Encerramento (NPS)'
+      ],
+      'TER': [],
+      'EXECUTAR': [
+        'DO (Execução)',
+        'CHECK (Qualidade)',
+        'ACT (Otimizações)',
+        'PLAN (Replanejamento)',
+        'Check-in (Revisão)',
+        'Check-in (Cliente)'
+      ]
+    }
   },
-  'Ongoing': {
-    id: 'ongoing',
-    height: 'h-80',
-    microSteps: ['DO (Execução)', 'CHECK (Qualidade)', 'ACT (Otimizações)', 'PLAN (Replanejamento)', 'Check-in (Revisão)', 'Check-in (Cliente)']
-  },
-  'Monetização': {
-    id: 'monetizacao',
-    height: 'h-96',
-    microSteps: ['Validação', 'Proposta Enviada', 'Em Negociação', 'Contrato na Rua']
+  'Expansão': {
+    id: 'expansao',
+    height: 'h-96',  // MAIOR (simétrico com Exposição)
+    microSteps: [
+      'Levantada de mão',
+      'Validação',
+      'Proposta enviada',
+      'Em negociação',
+      'Contrato na rua',
+      'Assinatura de contrato'
+    ]
   }
 };
+
+// Category order for rendering categorized stages
+export const CATEGORY_ORDER = ['SABER', 'TER', 'EXECUTAR'];

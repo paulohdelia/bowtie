@@ -11,13 +11,27 @@ export const extractSprints = (bowTieData) => {
   const sprintsSet = new Set();
 
   bowTieData.forEach(stage => {
-    stage.microSteps.forEach(microStep => {
-      microStep.actions.forEach(action => {
-        if (action.sprint && action.sprint !== '') {
-          sprintsSet.add(action.sprint);
-        }
+    if (stage.isCategorized && stage.categories) {
+      // Categorized stage
+      stage.categories.forEach(category => {
+        (category.microSteps || []).forEach(microStep => {
+          (microStep.actions || []).forEach(action => {
+            if (action.sprint && action.sprint !== '') {
+              sprintsSet.add(action.sprint);
+            }
+          });
+        });
       });
-    });
+    } else if (stage.microSteps) {
+      // Simple stage
+      stage.microSteps.forEach(microStep => {
+        (microStep.actions || []).forEach(action => {
+          if (action.sprint && action.sprint !== '') {
+            sprintsSet.add(action.sprint);
+          }
+        });
+      });
+    }
   });
 
   // Converter Set para Array e ordenar
@@ -56,9 +70,20 @@ export const detectCurrentSprint = (bowTieData) => {
  * @returns {boolean} True se houver ações no backlog
  */
 export const hasBacklogActions = (bowTieData) => {
-  return bowTieData.some(stage =>
-    stage.microSteps.some(microStep =>
-      microStep.actions.some(action => !action.sprint || action.sprint === '')
-    )
-  );
+  return bowTieData.some(stage => {
+    if (stage.isCategorized && stage.categories) {
+      // Categorized stage
+      return stage.categories.some(category =>
+        (category.microSteps || []).some(microStep =>
+          (microStep.actions || []).some(action => !action.sprint || action.sprint === '')
+        )
+      );
+    } else if (stage.microSteps) {
+      // Simple stage
+      return stage.microSteps.some(microStep =>
+        (microStep.actions || []).some(action => !action.sprint || action.sprint === '')
+      );
+    }
+    return false;
+  });
 };

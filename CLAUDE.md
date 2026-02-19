@@ -50,7 +50,11 @@ See `.env.example` for reference.
 **Ferraz Piai BowTie** is a Revenue Operations management application that visualizes the customer journey using a "Bow Tie" funnel concept, from pre-sales to monetization/expansion.
 
 **Core Concepts:**
-- **BowTie Visualization**: Visual funnel representing 8 stages of the revenue journey
+- **BowTie Visualization**: Visual funnel representing 7 stages of the revenue journey (Exposição → Pré-Venda → Aquisição → Commit → Onboarding → Retenção → Expansão)
+- **Categorized Stages**: Onboarding and Retenção stages use a category-based system (SABER, TER, EXECUTAR)
+  - These stages display 3 vertical rows when expanded, one per category
+  - Categories align with Ferraz Piai's product portfolio
+  - See `docs/CATEGORIZED_STAGES.md` for details
 - **Bottleneck Detection**: Automatically identifies the stage with highest accumulated impact (the "trava")
 - **Heatmap System**: Visual gradient based on impact scores (High=10, Medium=5, Low=1)
 - **Sprint Planning**: Actions are mapped to sprint cycles for team workflow visualization
@@ -174,7 +178,7 @@ All state lives in `index.jsx` and flows down via props.
 
 ## Data Structure
 
-**Stage Object:**
+**Stage Object (Simple):**
 ```javascript
 {
   id: string,              // e.g., 'prevenda', 'aquisicao'
@@ -185,6 +189,23 @@ All state lives in `index.jsx` and flows down via props.
   microSteps: [{
     name: string,
     actions: Action[]
+  }]
+}
+```
+
+**Stage Object (Categorized):**
+```javascript
+{
+  id: string,              // e.g., 'onboarding', 'retencao'
+  title: string,           // Display name
+  height: string,          // Tailwind class (e.g., 'h-96')
+  isCategorized: boolean,  // true for categorized stages
+  categories: [{
+    name: string,          // 'SABER', 'TER', or 'EXECUTAR'
+    microSteps: [{
+      name: string,
+      actions: Action[]
+    }]
   }]
 }
 ```
@@ -227,7 +248,8 @@ When replacing mocks with API:
 All documentation is organized in the `/docs` folder:
 
 **Active Documentation (docs/):**
-- `docs/STAGES_AND_MICROSTEPS.md` - **Official reference** for all 8 stages and 41 micro-steps
+- `docs/STAGES_AND_MICROSTEPS.md` - **Official reference** for all 7 stages and categorized structure
+- `docs/CATEGORIZED_STAGES.md` - Detailed guide on categorized stages (Onboarding, Retenção)
 - `docs/ARCHITECTURE.md` - Deep dive into patterns and design decisions
 - `docs/QUICK_START.md` - Practical guide for adding features
 - `docs/SORTING_FEATURE.md` - Table sorting and filter reset functionality guide
@@ -236,6 +258,7 @@ All documentation is organized in the `/docs` folder:
 - `docs/dev-docs.md` - Original technical documentation, includes future backend schema
 - `docs/INSTALL.md` - Installation and setup guide
 - `docs/API_INTEGRATION.md` - API integration documentation
+- `docs/BOWTIE_RESTRUCTURING_PLAN.md` - Restructuring plan documentation (historical reference)
 
 **AI Agents (agents/):**
 - `agents/action-classifier-prompt.md` - GPT-4 system prompt to classify user input into structured BowTie actions

@@ -23,13 +23,27 @@ export const useFilters = (activeSprint, bowTieData) => {
 
     const peopleSet = new Set();
     bowTieData.forEach(stage => {
-      stage.microSteps.forEach(microStep => {
-        microStep.actions.forEach(action => {
-          if (action.responsible && action.responsible.trim() !== '') {
-            peopleSet.add(action.responsible.trim());
-          }
+      if (stage.isCategorized && stage.categories) {
+        // Categorized stage
+        stage.categories.forEach(category => {
+          (category.microSteps || []).forEach(microStep => {
+            (microStep.actions || []).forEach(action => {
+              if (action.responsible && action.responsible.trim() !== '') {
+                peopleSet.add(action.responsible.trim());
+              }
+            });
+          });
         });
-      });
+      } else if (stage.microSteps) {
+        // Simple stage
+        stage.microSteps.forEach(microStep => {
+          (microStep.actions || []).forEach(action => {
+            if (action.responsible && action.responsible.trim() !== '') {
+              peopleSet.add(action.responsible.trim());
+            }
+          });
+        });
+      }
     });
 
     return Array.from(peopleSet).sort();
@@ -102,20 +116,43 @@ export const useTableData = (bowTieData, activeStage, selectedMicroFilters, filt
 
     const rows = [];
     stagesToProcess.forEach(stage => {
-      stage.microSteps.forEach(micro => {
-        if (activeStage && selectedMicroFilters.length > 0) {
-          if (!selectedMicroFilters.includes(micro.name)) return;
-        }
+      if (stage.isCategorized && stage.categories) {
+        // Categorized stage: loop through categories
+        stage.categories.forEach(category => {
+          (category.microSteps || []).forEach(micro => {
+            if (activeStage && selectedMicroFilters.length > 0) {
+              const filterKey = `${category.name} | ${micro.name}`;
+              if (!selectedMicroFilters.includes(filterKey) && !selectedMicroFilters.includes(micro.name)) return;
+            }
 
-        const filteredActions = filterActionsBySprint(micro.actions);
-        filteredActions.forEach(action => {
-          rows.push({
-            ...action,
-            stageTitle: stage.title,
-            microStepName: micro.name
+            const filteredActions = filterActionsBySprint(micro.actions || []);
+            filteredActions.forEach(action => {
+              rows.push({
+                ...action,
+                stageTitle: stage.title,
+                categoryName: category.name,
+                microStepName: micro.name
+              });
+            });
           });
         });
-      });
+      } else if (stage.microSteps) {
+        // Simple stage
+        stage.microSteps.forEach(micro => {
+          if (activeStage && selectedMicroFilters.length > 0) {
+            if (!selectedMicroFilters.includes(micro.name)) return;
+          }
+
+          const filteredActions = filterActionsBySprint(micro.actions || []);
+          filteredActions.forEach(action => {
+            rows.push({
+              ...action,
+              stageTitle: stage.title,
+              microStepName: micro.name
+            });
+          });
+        });
+      }
     });
 
     return rows;

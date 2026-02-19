@@ -11,11 +11,23 @@ export const useBowTieCalculations = (bowTieData, selectedSprint) => {
       let stageTotalImpact = 0;
       let stageTotalEffort = 0;
 
-      stage.microSteps.forEach(step => {
-        const actionsForScore = getActionsForImpactCalculation(step.actions, selectedSprint);
-        stageTotalImpact += calculateImpactScore(actionsForScore);
-        stageTotalEffort += calculateEffortScore(actionsForScore);
-      });
+      if (stage.isCategorized && stage.categories) {
+        // Categorized stage: loop through categories
+        stage.categories.forEach(category => {
+          (category.microSteps || []).forEach(step => {
+            const actionsForScore = getActionsForImpactCalculation(step.actions || [], selectedSprint);
+            stageTotalImpact += calculateImpactScore(actionsForScore);
+            stageTotalEffort += calculateEffortScore(actionsForScore);
+          });
+        });
+      } else if (stage.microSteps) {
+        // Simple stage: loop through micro-steps
+        stage.microSteps.forEach(step => {
+          const actionsForScore = getActionsForImpactCalculation(step.actions || [], selectedSprint);
+          stageTotalImpact += calculateImpactScore(actionsForScore);
+          stageTotalEffort += calculateEffortScore(actionsForScore);
+        });
+      }
 
       scores[stage.id] = { impact: stageTotalImpact, effort: stageTotalEffort };
 

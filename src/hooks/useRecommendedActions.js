@@ -11,14 +11,29 @@ export const useRecommendedActions = (bowTieData, bottleneckStageId) => {
     // Coletar todas as ações de todos os stages
     const allActions = [];
     bowTieData.forEach(stage => {
-      stage.microSteps.forEach(microStep => {
-        microStep.actions.forEach(action => {
-          allActions.push({
-            ...action,
-            stageId: stage.id // Adicionar referência ao stage
+      if (stage.isCategorized && stage.categories) {
+        // Categorized stage
+        stage.categories.forEach(category => {
+          (category.microSteps || []).forEach(microStep => {
+            (microStep.actions || []).forEach(action => {
+              allActions.push({
+                ...action,
+                stageId: stage.id // Adicionar referência ao stage
+              });
+            });
           });
         });
-      });
+      } else if (stage.microSteps) {
+        // Simple stage
+        stage.microSteps.forEach(microStep => {
+          (microStep.actions || []).forEach(action => {
+            allActions.push({
+              ...action,
+              stageId: stage.id // Adicionar referência ao stage
+            });
+          });
+        });
+      }
     });
 
     console.log('[useRecommendedActions] Total actions:', allActions.length);

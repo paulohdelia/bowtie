@@ -183,6 +183,23 @@ const normalizeDate = (prazo) => {
 };
 
 /**
+ * Map old stage names to new ones for backward compatibility
+ * @param {string} macroEtapa - Stage name from API
+ * @returns {string} Mapped stage name
+ */
+const mapOldStageNames = (macroEtapa) => {
+  const stageMapping = {
+    'Compromisso': 'Commit',
+    'Monetização': 'Expansão',
+    'Diagnósticos': 'Retenção',
+    'Implementações': 'Retenção',
+    'Ongoing': 'Retenção'
+  };
+
+  return stageMapping[macroEtapa] || macroEtapa;
+};
+
+/**
  * Normaliza um registro da API para o formato de Action
  * @param {Object} item - Item da API
  * @returns {Object} Objeto normalizado
@@ -193,9 +210,13 @@ const normalizeItem = (item) => {
     ? item.id.toString()
     : `action-${item.row_number || Math.random().toString(36).substr(2, 9)}`;
 
+  // Map old stage names to new ones
+  const originalMacro = item.macro_etapa?.trim() || '';
+  const mappedMacro = mapOldStageNames(originalMacro);
+
   return {
     id,
-    macroEtapa: item.macro_etapa?.trim() || '',
+    macroEtapa: mappedMacro,
     microEtapa: normalizeMicroStepName(item.micro_etapa), // Normaliza para padrão
     sprint: normalizeSprint(item.sprint),
     status: normalizeStatus(item.status),
@@ -213,6 +234,24 @@ const normalizeItem = (item) => {
 };
 
 /**
+ * Parse micro_etapa to extract category for categorized stages
+ * @param {string} microEtapa - Micro-etapa string from API
+ * @returns {Object} Object with macro, category, and micro parts
+ */
+const parseMicroEtapa = (microEtapa) => {
+  const parts = microEtapa.split(' | ');
+  if (parts.length === 3) {
+    // New format: "Macro | Category | Micro"
+    return { macro: parts[0].trim(), category: parts[1].trim(), micro: parts[2].trim() };
+  } else if (parts.length === 2) {
+    // Old format: "Macro | Micro"
+    return { macro: parts[0].trim(), category: null, micro: parts[1].trim() };
+  }
+  // No separator, just micro-step name
+  return { macro: null, category: null, micro: microEtapa };
+};
+
+/**
  * Constrói um objeto Stage a partir de uma macro-etapa e suas micro-etapas agrupadas
  * @param {string} macroEtapa - Nome da macro-etapa
  * @param {Object} microGroups - Objeto com micro-etapas agrupadas (ações dos dados)
@@ -221,49 +260,87 @@ const normalizeItem = (item) => {
 const buildStage = (macroEtapa, microGroups) => {
   const config = STAGE_CONFIG[macroEtapa];
 
-  // Se a config define micro-etapas, garantir que todas existam
-  let microSteps;
+  // Check if this is a categorized stage
+  if (config?.isCategorized) {
+    // Initialize category structure
+    const categorized = {};
 
-  if (config?.microSteps && Array.isArray(config.microSteps)) {
-    // Criar Set para rastreamento rápido de micro-etapas já processadas
-    const processedMicroSteps = new Set();
-
-    // Usar micro-etapas pré-definidas e mesclar com dados
-    microSteps = config.microSteps.map(microName => {
-      processedMicroSteps.add(microName);
-      return {
-        name: microName,
-        actions: microGroups[microName] || [] // Usar ações dos dados ou array vazio
-      };
+    Object.keys(config.categories).forEach(catName => {
+      categorized[catName] = {};
+      config.categories[catName].forEach(microName => {
+        categorized[catName][microName] = [];
+      });
     });
 
-    // Adicionar micro-etapas dos dados que não estão na config
-    // (essas são micro-etapas extras/customizadas que vieram da API)
+    // Distribute actions by category + micro-step (ONLY predefined micro-steps)
     Object.entries(microGroups).forEach(([microName, actions]) => {
-      if (!processedMicroSteps.has(microName)) {
-        console.warn(`[Transformer] Micro-etapa não mapeada encontrada: "${microName}" em "${macroEtapa}"`);
-        microSteps.push({
-          name: microName,
-          actions: actions
-        });
+      // Parse micro-step name to extract category
+      const parsed = parseMicroEtapa(microName);
+      const category = parsed.category || 'SABER'; // Default category if not specified
+      const microNameClean = parsed.micro;
+
+      // Only add if micro-step exists in config (ignore unmapped micro-steps)
+      if (categorized[category]?.[microNameClean] !== undefined) {
+        categorized[category][microNameClean].push(...actions);
+      } else {
+        // Micro-step not in config - IGNORE and log warning
+        console.warn(`[Transformer] Micro-etapa IGNORADA (não está no STAGE_CONFIG): "${microNameClean}" em "${macroEtapa}" (categoria: ${category})`);
       }
     });
-  } else {
-    // Se não há config, usar apenas dados
-    microSteps = Object.entries(microGroups).map(([microName, actions]) => ({
-      name: microName,
-      actions: actions
-    }));
-  }
 
-  return {
-    id: config?.id || macroEtapa.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
-    title: macroEtapa,
-    height: config?.height || 'h-64',
-    subtitle: config?.subtitle,
-    isKnot: config?.isKnot || false,
-    microSteps: microSteps
-  };
+    // Build categories array
+    const categories = Object.entries(categorized).map(([catName, microGroups]) => ({
+      name: catName,
+      microSteps: Object.entries(microGroups).map(([microName, actions]) => ({
+        name: microName,
+        actions: actions
+      }))
+    }));
+
+    return {
+      id: config.id,
+      title: macroEtapa,
+      height: config.height,
+      isKnot: config.isKnot || false,
+      isCategorized: true,
+      categories: categories
+    };
+  } else {
+    // Simple stage (existing logic preserved)
+    let microSteps;
+
+    if (config?.microSteps && Array.isArray(config.microSteps)) {
+      // Usar APENAS micro-etapas pré-definidas (ignora extras da API)
+      microSteps = config.microSteps.map(microName => {
+        return {
+          name: microName,
+          actions: microGroups[microName] || [] // Usar ações dos dados ou array vazio
+        };
+      });
+
+      // Log warnings for unmapped micro-steps (but don't add them)
+      Object.keys(microGroups).forEach(microName => {
+        if (!config.microSteps.includes(microName)) {
+          console.warn(`[Transformer] Micro-etapa IGNORADA (não está no STAGE_CONFIG): "${microName}" em "${macroEtapa}"`);
+        }
+      });
+    } else {
+      // Se não há config, usar apenas dados
+      microSteps = Object.entries(microGroups).map(([microName, actions]) => ({
+        name: microName,
+        actions: actions
+      }));
+    }
+
+    return {
+      id: config?.id || macroEtapa.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+      title: macroEtapa,
+      height: config?.height || 'h-64',
+      subtitle: config?.subtitle,
+      isKnot: config?.isKnot || false,
+      microSteps: microSteps
+    };
+  }
 };
 
 /**
@@ -345,22 +422,43 @@ export const transformApiDataToBowTie = (apiData) => {
       return stagesMap[title];
     }
 
-    // Caso contrário, criar um stage vazio com micro-etapas pré-definidas
-    const microSteps = config.microSteps
-      ? config.microSteps.map(microName => ({
+    // Caso contrário, criar um stage vazio
+    if (config.isCategorized) {
+      // Stage categorizada: criar estrutura de categorias
+      const categories = Object.entries(config.categories).map(([catName, microNames]) => ({
+        name: catName,
+        microSteps: microNames.map(microName => ({
           name: microName,
           actions: []
         }))
-      : [];
+      }));
 
-    return {
-      id: config.id,
-      title: title,
-      height: config.height,
-      subtitle: config.subtitle,
-      isKnot: config.isKnot || false,
-      microSteps: microSteps
-    };
+      return {
+        id: config.id,
+        title: title,
+        height: config.height,
+        isKnot: config.isKnot || false,
+        isCategorized: true,
+        categories: categories
+      };
+    } else {
+      // Stage simples: criar micro-steps
+      const microSteps = config.microSteps
+        ? config.microSteps.map(microName => ({
+            name: microName,
+            actions: []
+          }))
+        : [];
+
+      return {
+        id: config.id,
+        title: title,
+        height: config.height,
+        subtitle: config.subtitle,
+        isKnot: config.isKnot || false,
+        microSteps: microSteps
+      };
+    }
   });
 
   console.log('[Transformer] Total stages (including empty):', allStages.length);
