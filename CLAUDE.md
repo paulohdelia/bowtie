@@ -52,7 +52,7 @@ See `.env.example` for reference.
 **Core Concepts:**
 - **BowTie Visualization**: Visual funnel representing 8 stages of the revenue journey
 - **Bottleneck Detection**: Automatically identifies the stage with highest accumulated impact (the "trava")
-- **Heatmap System**: Visual gradient based on impact scores (High=3, Medium=2, Low=1)
+- **Heatmap System**: Visual gradient based on impact scores (High=10, Medium=5, Low=1)
 - **Sprint Planning**: Actions are mapped to sprint cycles for team workflow visualization
 - **Default Sprint Filter**: Automatically initializes with current active sprint on app load
 - **Table Sorting**: Click any column header to sort data (ascending/descending/reset)
@@ -64,7 +64,7 @@ See `.env.example` for reference.
   - Resets all filters (sprint, status, person, micro-steps, stage) and sorting
 - **Recommended Actions**: Intelligent prioritization system for backlog actions
   - Highlights top 5 actions with ⭐ star icon in the table
-  - Algorithm: Score = Impact - Effort + Bottleneck Bonus (+2 if action is in "trava")
+  - Algorithm: Score = Impact - Effort + Bottleneck Bonus (+7 if action is in "trava")
   - Only considers backlog items (unplanned actions)
   - See `docs/RECOMMENDED_ACTIONS.md` for details
 - **AI Assistant**: Integrated n8n chat widget with auto-refresh on registration completion
@@ -126,7 +126,7 @@ src/
 ## Critical Business Logic
 
 ### Impact Score Calculation
-- **Weights**: High=3, Medium=2, Low=1
+- **Weights**: High=10, Medium=5, Low=1
 - **Aggregation**: Sum of all action impacts per stage
 - **Heatmap**: `intensity = stageImpactScore / maxImpactScore`
 - Located in: `src/utils/calculations.js` and `src/hooks/useBowTieCalculations.js`

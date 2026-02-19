@@ -340,13 +340,21 @@ const ActionTable = ({
                   <td className="p-4 max-w-xs truncate group-hover:whitespace-normal" title={action.fact}>{action.fact}</td>
                   <td className="p-4 max-w-xs truncate group-hover:whitespace-normal" title={action.cause}>{action.cause}</td>
                   <td className="p-4 text-center">
-                    <span className={`text-[10px] font-bold uppercase ${action.impact === 'Alto' ? 'text-[#E30613]' : 'text-gray-500'}`}>
-                      {action.impact}
+                    <span className={`text-lg font-bold ${
+                      action.impact === 10 ? 'text-[#E30613]' :
+                      action.impact === 5 ? 'text-yellow-500' :
+                      'text-gray-500'
+                    }`}>
+                      {action.impact || 0}
                     </span>
                   </td>
                   <td className="p-4 text-center">
-                    <span className={`text-[10px] font-bold uppercase ${action.effort === 'Alto' ? 'text-[#E30613]' : 'text-gray-500'}`}>
-                      {action.effort}
+                    <span className={`text-lg font-bold ${
+                      action.effort === 10 ? 'text-[#E30613]' :
+                      action.effort === 5 ? 'text-yellow-500' :
+                      'text-green-500'
+                    }`}>
+                      {action.effort || 0}
                     </span>
                   </td>
                   <td className="p-4 max-w-sm truncate group-hover:whitespace-normal text-gray-400 text-xs" title={action.comments}>

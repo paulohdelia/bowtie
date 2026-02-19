@@ -37,39 +37,69 @@ const normalizeStatus = (status) => {
 
 /**
  * Normaliza o nível de impacto
- * @param {string} impacto - Impacto vindo da API
- * @returns {string} Impacto normalizado: Alto | Médio | Baixo
+ * @param {string|number} impacto - Impacto vindo da API (número 1-10 ou texto)
+ * @returns {number} Impacto normalizado: 1, 5 ou 10
  */
 const normalizeImpact = (impacto) => {
-  if (!impacto) return 'Baixo';
+  if (!impacto) return 1;
 
+  // Se já é número, validar e retornar
+  if (typeof impacto === 'number') {
+    if (impacto >= 8) return 10; // Alto
+    if (impacto >= 4) return 5;  // Médio
+    return 1;                     // Baixo
+  }
+
+  // Se é string numérica, converter e validar
+  const numValue = Number(impacto);
+  if (!isNaN(numValue)) {
+    if (numValue >= 8) return 10;
+    if (numValue >= 4) return 5;
+    return 1;
+  }
+
+  // Fallback para texto (compatibilidade com dados antigos)
   const normalized = impacto.toString().toLowerCase().trim();
-
   if (normalized.includes('alt') || normalized === 'high' || normalized === 'h') {
-    return 'Alto';
+    return 10;
   } else if (normalized.includes('méd') || normalized.includes('med') || normalized === 'medium' || normalized === 'm') {
-    return 'Médio';
+    return 5;
   } else {
-    return 'Baixo';
+    return 1;
   }
 };
 
 /**
  * Normaliza o nível de esforço
- * @param {string} esforco - Esforço vindo da API
- * @returns {string} Esforço normalizado: Alto | Médio | Baixo
+ * @param {string|number} esforco - Esforço vindo da API (número 1-10 ou texto)
+ * @returns {number} Esforço normalizado: 1, 5 ou 10
  */
 const normalizeEffort = (esforco) => {
-  if (!esforco) return 'Baixo';
+  if (!esforco) return 1;
 
+  // Se já é número, validar e retornar
+  if (typeof esforco === 'number') {
+    if (esforco >= 8) return 10; // Alto
+    if (esforco >= 4) return 5;  // Médio
+    return 1;                     // Baixo
+  }
+
+  // Se é string numérica, converter e validar
+  const numValue = Number(esforco);
+  if (!isNaN(numValue)) {
+    if (numValue >= 8) return 10;
+    if (numValue >= 4) return 5;
+    return 1;
+  }
+
+  // Fallback para texto (compatibilidade com dados antigos)
   const normalized = esforco.toString().toLowerCase().trim();
-
   if (normalized.includes('alt') || normalized === 'high' || normalized === 'h') {
-    return 'Alto';
+    return 10;
   } else if (normalized.includes('méd') || normalized.includes('med') || normalized === 'medium' || normalized === 'm') {
-    return 'Médio';
+    return 5;
   } else {
-    return 'Baixo';
+    return 1;
   }
 };
 

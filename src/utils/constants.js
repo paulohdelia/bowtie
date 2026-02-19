@@ -21,13 +21,13 @@ export const CATEGORY_CONFIG = {
 };
 
 export const IMPACT_WEIGHTS = {
-  'Alto': 3,
-  'Médio': 2,
+  'Alto': 10,
+  'Médio': 5,
   'Baixo': 1
 };
 
 export const EFFORT_WEIGHTS = {
-  'Alto': 3,
-  'Médio': 2,
+  'Alto': 10,
+  'Médio': 5,
   'Baixo': 1
 };

@@ -1,11 +1,9 @@
-import { IMPACT_WEIGHTS, EFFORT_WEIGHTS } from './constants';
-
 export const calculateImpactScore = (actions) => {
-  return actions.reduce((acc, action) => acc + (IMPACT_WEIGHTS[action.impact] || 0), 0);
+  return actions.reduce((acc, action) => acc + (action.impact || 0), 0);
 };
 
 export const calculateEffortScore = (actions) => {
-  return actions.reduce((acc, action) => acc + (EFFORT_WEIGHTS[action.effort] || 0), 0);
+  return actions.reduce((acc, action) => acc + (action.effort || 0), 0);
 };
 
 export const getActionsForImpactCalculation = (actions, selectedSprint) => {
@@ -26,15 +24,16 @@ export const getActionsForImpactCalculation = (actions, selectedSprint) => {
 };
 
 export const calculateRecommendationScore = (action, bottleneckStageId) => {
-  const impactWeight = IMPACT_WEIGHTS[action.impact] || 0;
-  const effortWeight = EFFORT_WEIGHTS[action.effort] || 0;
+  const impactValue = action.impact || 0; // Valor numérico: 1, 5, or 10
+  const effortValue = action.effort || 0; // Valor numérico: 1, 5, or 10
 
-  // Score = Impacto - Esforço + Bônus Trava (2 pontos)
-  let score = impactWeight - effortWeight;
+  // Score = Impact - Effort + Bottleneck Bonus
+  // Range: -9 (Baixo impact, Alto effort) to +16 (Alto impact, Baixo effort, in bottleneck)
+  let score = impactValue - effortValue;
 
   // Bônus se a ação está na trava (bottleneck)
   if (action.stageId === bottleneckStageId) {
-    score += 2;
+    score += 7; // Bônus proporcional à escala 1-10 (70% da escala)
   }
 
   return score;

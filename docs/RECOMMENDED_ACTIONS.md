@@ -15,24 +15,27 @@ Score = Peso_Impacto - Peso_Esforço + Bônus_Trava
 ```
 
 **Pesos:**
-- Alto = 3 pontos
-- Médio = 2 pontos
+- Alto = 10 pontos
+- Médio = 5 pontos
 - Baixo = 1 ponto
 
 **Bônus da Trava:**
-- +2 pontos se a ação está no stage identificado como bottleneck (trava)
+- +7 pontos se a ação está no stage identificado como bottleneck (trava)
 
 **Exemplos de Score:**
 
 | Impacto | Esforço | Na Trava? | Cálculo | Score Final |
 |---------|---------|-----------|---------|-------------|
-| Alto    | Baixo   | ✅ Sim    | 3 - 1 + 2 | **4** 🥇 |
-| Alto    | Médio   | ✅ Sim    | 3 - 2 + 2 | **3** 🥈 |
-| Alto    | Baixo   | ❌ Não    | 3 - 1 + 0 | **2** |
-| Alto    | Alto    | ✅ Sim    | 3 - 3 + 2 | **2** |
-| Médio   | Baixo   | ✅ Sim    | 2 - 1 + 2 | **3** 🥈 |
-| Médio   | Baixo   | ❌ Não    | 2 - 1 + 0 | **1** |
-| Baixo   | Alto    | ✅ Sim    | 1 - 3 + 2 | **0** |
+| Alto    | Baixo   | ✅ Sim    | 10 - 1 + 7 | **16** 🥇 |
+| Alto    | Médio   | ✅ Sim    | 10 - 5 + 7 | **12** 🥈 |
+| Médio   | Baixo   | ✅ Sim    | 5 - 1 + 7 | **11** 🥉 |
+| Alto    | Baixo   | ❌ Não    | 10 - 1 + 0 | **9** |
+| Alto    | Alto    | ✅ Sim    | 10 - 10 + 7 | **7** |
+| Médio   | Baixo   | ❌ Não    | 5 - 1 + 0 | **4** |
+| Médio   | Médio   | ❌ Não    | 5 - 5 + 0 | **0** |
+| Baixo   | Baixo   | ❌ Não    | 1 - 1 + 0 | **0** |
+| Baixo   | Médio   | ❌ Não    | 1 - 5 + 0 | **-4** |
+| Baixo   | Alto    | ❌ Não    | 1 - 10 + 0 | **-9** |
 
 ### Regras de Filtragem
 
