@@ -62,6 +62,11 @@ See `.env.example` for reference.
 - **Smart Reset Button**: Appears only when filters or sorting are active
   - One-click reset to default state
   - Resets all filters (sprint, status, person, micro-steps, stage) and sorting
+- **Recommended Actions**: Intelligent prioritization system for backlog actions
+  - Highlights top 5 actions with ⭐ star icon in the table
+  - Algorithm: Score = Impact - Effort + Bottleneck Bonus (+2 if action is in "trava")
+  - Only considers backlog items (unplanned actions)
+  - See `docs/RECOMMENDED_ACTIONS.md` for details
 - **AI Assistant**: Integrated n8n chat widget with auto-refresh on registration completion
   - Floating button for easy access
   - Conversational problem classification
@@ -89,7 +94,8 @@ src/
 │   ├── useSprintsData.js          # Sprint data and active sprint detection
 │   ├── useBowTieCalculations.js   # Score calculations and bottleneck detection
 │   ├── useFilters.js              # Filter logic, auto-init with active sprint
-│   └── useSorting.js              # Table sorting logic with multi-type support
+│   ├── useSorting.js              # Table sorting logic with multi-type support
+│   └── useRecommendedActions.js   # Recommended actions prioritization (top 5)
 ├── styles/
 │   └── n8n-chat-custom.css        # Chat widget customization (brand colors, textarea fix)
 ├── services/
@@ -106,8 +112,9 @@ src/
 2. `useSprintsData()` → provides sprints list and active sprint object
 3. `useFilters()` → manages sprint/micro-step filters, auto-initializes with active sprint
 4. `useBowTieCalculations()` → computes scores and identifies bottleneck
-5. `N8nChat` → detects completion, triggers `refetch()`, preserves chat context
-6. Components receive processed data via props
+5. `useRecommendedActions()` → calculates top 5 prioritized backlog actions
+6. `N8nChat` → detects completion, triggers `refetch()`, preserves chat context
+7. Components receive processed data via props
 
 **Chat Auto-Refresh Flow:**
 1. User sends problem via chat → n8n processes and responds

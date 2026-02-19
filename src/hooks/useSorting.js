@@ -3,9 +3,10 @@ import { useState, useMemo } from 'react';
 /**
  * Hook para gerenciar ordenação de tabelas
  * @param {Array} data - Dados a serem ordenados
+ * @param {Array} recommendedActionIds - IDs das ações recomendadas (opcional)
  * @returns {Object} - { sortedData, sortConfig, requestSort, resetSort }
  */
-export const useSorting = (data) => {
+export const useSorting = (data, recommendedActionIds = []) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
 
   const requestSort = (key) => {
@@ -29,11 +30,29 @@ export const useSorting = (data) => {
   };
 
   const sortedData = useMemo(() => {
-    if (!sortConfig.key || !sortConfig.direction) {
-      return data;
-    }
-
     const sortableData = [...data];
+
+    // Se não houver ordenação ativa, ordenar por recomendações primeiro
+    if (!sortConfig.key || !sortConfig.direction) {
+      if (recommendedActionIds && recommendedActionIds.length > 0) {
+        sortableData.sort((a, b) => {
+          const aIsRecommended = recommendedActionIds.includes(a.id);
+          const bIsRecommended = recommendedActionIds.includes(b.id);
+
+          // Recomendadas vêm primeiro
+          if (aIsRecommended && !bIsRecommended) return -1;
+          if (!aIsRecommended && bIsRecommended) return 1;
+
+          // Dentro das recomendadas, manter ordem original (por score)
+          if (aIsRecommended && bIsRecommended) {
+            return recommendedActionIds.indexOf(a.id) - recommendedActionIds.indexOf(b.id);
+          }
+
+          return 0; // Manter ordem original para não-recomendadas
+        });
+      }
+      return sortableData;
+    }
 
     sortableData.sort((a, b) => {
       const aValue = a[sortConfig.key];
@@ -73,7 +92,7 @@ export const useSorting = (data) => {
     });
 
     return sortableData;
-  }, [data, sortConfig]);
+  }, [data, sortConfig, recommendedActionIds]);
 
   return { sortedData, sortConfig, requestSort, resetSort };
 };

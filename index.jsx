@@ -5,10 +5,12 @@ import ActionTable from './src/components/layout/ActionTable';
 import LoadingSpinner from './src/components/common/LoadingSpinner';
 import ErrorMessage from './src/components/common/ErrorMessage';
 import N8nChat from './src/components/common/N8nChat';
+import DebugPanel from './src/components/common/DebugPanel';
 import { useBowTieData } from './src/hooks/useBowTieData';
 import { useSprintsData } from './src/hooks/useSprintsData';
 import { useBowTieCalculations } from './src/hooks/useBowTieCalculations';
 import { useFilters, useTableData } from './src/hooks/useFilters';
+import { useRecommendedActions } from './src/hooks/useRecommendedActions';
 
 const BowTieApp = () => {
   const [activeStage, setActiveStage] = useState(null);
@@ -42,6 +44,8 @@ const BowTieApp = () => {
     selectedMicroFilters,
     filterActionsBySprint
   );
+
+  const recommendedActionIds = useRecommendedActions(bowTieData, bottleneckStageId);
 
   // Handlers
   const handleStageClick = (id) => {
@@ -103,11 +107,19 @@ const BowTieApp = () => {
         selectedPerson={selectedPerson}
         setSelectedPerson={setSelectedPerson}
         availablePeople={availablePeople}
+        recommendedActionIds={recommendedActionIds}
         detailsRef={detailsRef}
       />
 
       {/* Chat Assistente n8n */}
       <N8nChat onRegistrationComplete={refetch} />
+
+      {/* Debug Panel (temporary) */}
+      <DebugPanel
+        recommendedActionIds={recommendedActionIds}
+        tableData={tableData}
+        bottleneckStageId={bottleneckStageId}
+      />
     </div>
   );
 };

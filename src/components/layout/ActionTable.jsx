@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Filter, Calendar, ChevronDown, CheckSquare, Square, Target, User, ArrowUpDown, ArrowUp, ArrowDown, RotateCcw } from 'lucide-react';
+import { Filter, Calendar, ChevronDown, CheckSquare, Square, Target, User, ArrowUpDown, ArrowUp, ArrowDown, RotateCcw, Star } from 'lucide-react';
 import StatusBadge from '../common/StatusBadge';
 import SprintBadge from '../common/SprintBadge';
 import CategoryBadge from '../common/CategoryBadge';
@@ -23,14 +23,15 @@ const ActionTable = ({
   setSelectedStatus,
   selectedPerson,
   setSelectedPerson,
-  availablePeople
+  availablePeople,
+  recommendedActionIds
 }) => {
   const [isMicroFilterOpen, setIsMicroFilterOpen] = useState(false);
   const microFilterRef = useRef(null);
   const detailsRef = useRef(null);
 
-  // Sorting hook
-  const { sortedData, sortConfig, requestSort, resetSort } = useSorting(tableData);
+  // Sorting hook (com IDs recomendados para ordenação automática)
+  const { sortedData, sortConfig, requestSort, resetSort } = useSorting(tableData, recommendedActionIds);
 
   // Check if any filters or sorting are active
   const hasActiveFiltersOrSort = useMemo(() => {
@@ -194,7 +195,6 @@ const ActionTable = ({
                   className="bg-[#0a0a0a] text-white border border-[#333] group-hover:border-[#E30613] rounded pl-4 pr-8 py-2 text-sm font-bold uppercase tracking-wide focus:outline-none focus:ring-1 focus:ring-[#E30613] transition-all cursor-pointer min-w-[200px]"
                 >
                   <option value="all">Visão Geral</option>
-                  <option value="backlog">Backlog</option>
                   {availableSprints.map(sprint => (
                     <option key={sprint.name} value={sprint.name}>
                       {sprint.name}{sprint.isActive ? ' (Ativa)' : ''}
@@ -304,7 +304,18 @@ const ActionTable = ({
                   <td className="p-4 whitespace-nowrap">
                     <StatusBadge status={action.status} />
                   </td>
-                  <td className="p-4 max-w-xs truncate font-medium text-white group-hover:whitespace-normal" title={action.action}>{action.action}</td>
+                  <td className="p-4 max-w-xs truncate font-medium text-white group-hover:whitespace-normal relative" title={action.action}>
+                    <div className="flex items-center gap-2">
+                      {recommendedActionIds?.includes(action.id) && (
+                        <Star
+                          size={16}
+                          className="text-yellow-400 fill-yellow-400 flex-shrink-0"
+                          title="Ação Recomendada: Alto impacto, baixo esforço e/ou na trava"
+                        />
+                      )}
+                      <span className="truncate">{action.action}</span>
+                    </div>
+                  </td>
                   <td className="p-4 whitespace-nowrap text-center text-xs font-mono">{action.deadline}</td>
                   <td className="p-4 whitespace-nowrap">
                     <div className="flex items-center gap-2">
