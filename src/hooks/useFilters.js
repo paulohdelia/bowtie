@@ -5,6 +5,7 @@ export const useFilters = (activeSprint, bowTieData) => {
   const [selectedMicroFilters, setSelectedMicroFilters] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedPerson, setSelectedPerson] = useState('all');
+  const [selectedIdentifier, setSelectedIdentifier] = useState('all');
   const hasInitialized = useRef(false);
 
   // Inicializar com a sprint ativa quando os dados carregarem
@@ -49,6 +50,38 @@ export const useFilters = (activeSprint, bowTieData) => {
     return Array.from(peopleSet).sort();
   }, [bowTieData]);
 
+  // Extrair lista única de identificadores de todas as ações
+  const availableIdentifiers = useMemo(() => {
+    if (!bowTieData || bowTieData.length === 0) return [];
+
+    const identifiersSet = new Set();
+    bowTieData.forEach(stage => {
+      if (stage.isCategorized && stage.categories) {
+        // Categorized stage
+        stage.categories.forEach(category => {
+          (category.microSteps || []).forEach(microStep => {
+            (microStep.actions || []).forEach(action => {
+              if (action.identifiedBy && action.identifiedBy.trim() !== '') {
+                identifiersSet.add(action.identifiedBy.trim());
+              }
+            });
+          });
+        });
+      } else if (stage.microSteps) {
+        // Simple stage
+        stage.microSteps.forEach(microStep => {
+          (microStep.actions || []).forEach(action => {
+            if (action.identifiedBy && action.identifiedBy.trim() !== '') {
+              identifiersSet.add(action.identifiedBy.trim());
+            }
+          });
+        });
+      }
+    });
+
+    return Array.from(identifiersSet).sort();
+  }, [bowTieData]);
+
   const filterActionsBySprint = (actions) => {
     let filtered = actions;
 
@@ -69,9 +102,14 @@ export const useFilters = (activeSprint, bowTieData) => {
       filtered = filtered.filter(a => a.status === selectedStatus);
     }
 
-    // Filtro por pessoa
+    // Filtro por pessoa (responsável)
     if (selectedPerson !== 'all') {
       filtered = filtered.filter(a => a.responsible === selectedPerson);
+    }
+
+    // Filtro por identificador
+    if (selectedIdentifier !== 'all') {
+      filtered = filtered.filter(a => a.identifiedBy === selectedIdentifier);
     }
 
     return filtered;
@@ -100,7 +138,10 @@ export const useFilters = (activeSprint, bowTieData) => {
     setSelectedStatus,
     selectedPerson,
     setSelectedPerson,
+    selectedIdentifier,
+    setSelectedIdentifier,
     availablePeople,
+    availableIdentifiers,
     filterActionsBySprint,
     toggleMicroFilter,
     clearMicroFilters

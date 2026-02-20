@@ -23,7 +23,10 @@ const ActionTable = ({
   setSelectedStatus,
   selectedPerson,
   setSelectedPerson,
+  selectedIdentifier,
+  setSelectedIdentifier,
   availablePeople,
+  availableIdentifiers,
   recommendedActionIds
 }) => {
   const [isMicroFilterOpen, setIsMicroFilterOpen] = useState(false);
@@ -39,17 +42,19 @@ const ActionTable = ({
       selectedSprint !== 'all' ||
       selectedStatus !== 'all' ||
       selectedPerson !== 'all' ||
+      selectedIdentifier !== 'all' ||
       selectedMicroFilters.length > 0 ||
       activeStage !== null ||
       sortConfig.key !== null
     );
-  }, [selectedSprint, selectedStatus, selectedPerson, selectedMicroFilters, activeStage, sortConfig]);
+  }, [selectedSprint, selectedStatus, selectedPerson, selectedIdentifier, selectedMicroFilters, activeStage, sortConfig]);
 
   // Reset all filters and sorting
   const handleResetAll = () => {
     setSelectedSprint('all');
     setSelectedStatus('all');
     setSelectedPerson('all');
+    setSelectedIdentifier('all');
     setSelectedMicroFilters([]);
     setActiveStage(null);
     resetSort();
@@ -245,7 +250,7 @@ const ActionTable = ({
               </div>
             </div>
 
-            {/* Filtro de Pessoa */}
+            {/* Filtro de Pessoa (Responsável) */}
             <div className="flex flex-col items-end">
               <label className="text-[10px] uppercase text-gray-500 font-bold mb-1 tracking-widest flex items-center gap-1">
                 <User size={10} /> Responsável
@@ -260,6 +265,27 @@ const ActionTable = ({
                   {availablePeople.map(person => (
                     <option key={person} value={person}>
                       {person}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Filtro de Identificador */}
+            <div className="flex flex-col items-end">
+              <label className="text-[10px] uppercase text-gray-500 font-bold mb-1 tracking-widest flex items-center gap-1">
+                <Target size={10} /> Identificado Por
+              </label>
+              <div className="relative group">
+                <select
+                  value={selectedIdentifier}
+                  onChange={(e) => setSelectedIdentifier(e.target.value)}
+                  className="bg-[#0a0a0a] text-white border border-[#333] group-hover:border-[#E30613] rounded pl-4 pr-8 py-2 text-sm font-bold uppercase tracking-wide focus:outline-none focus:ring-1 focus:ring-[#E30613] transition-all cursor-pointer min-w-[180px]"
+                >
+                  <option value="all">Todos</option>
+                  {availableIdentifiers.map(identifier => (
+                    <option key={identifier} value={identifier}>
+                      {identifier}
                     </option>
                   ))}
                 </select>

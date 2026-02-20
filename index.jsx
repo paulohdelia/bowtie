@@ -39,7 +39,10 @@ const BowTieApp = () => {
     setSelectedStatus,
     selectedPerson,
     setSelectedPerson,
+    selectedIdentifier,
+    setSelectedIdentifier,
     availablePeople,
+    availableIdentifiers,
     filterActionsBySprint,
     toggleMicroFilter
   } = useFilters(activeSprint, bowTieData);
@@ -139,7 +142,10 @@ const BowTieApp = () => {
         setSelectedStatus={setSelectedStatus}
         selectedPerson={selectedPerson}
         setSelectedPerson={setSelectedPerson}
+        selectedIdentifier={selectedIdentifier}
+        setSelectedIdentifier={setSelectedIdentifier}
         availablePeople={availablePeople}
+        availableIdentifiers={availableIdentifiers}
         recommendedActionIds={recommendedActionIds}
         detailsRef={detailsRef}
       />
