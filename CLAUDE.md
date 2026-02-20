@@ -77,6 +77,13 @@ See `.env.example` for reference.
   - Automatic data refresh when "Registro concluído!" is detected
   - Context preservation during refresh (chat stays open)
   - See `docs/CHAT_INTEGRATION.md` for details
+- **User Session**: Persistent user identification system
+  - Modal on first access to capture user name
+  - localStorage persistence across sessions
+  - Personalized chat title ("Olá, [Nome]!")
+  - User metadata sent to n8n (userName, sessionId, timestamp)
+  - Chat history preserved between sessions
+  - See `docs/USER_SESSION.md` for details
 
 ## Architecture
 
@@ -88,6 +95,7 @@ src/
 ├── components/
 │   ├── common/             # Reusable UI components
 │   │   ├── N8nChat.jsx            # n8n chat widget with auto-refresh
+│   │   ├── UserIdentification.jsx # User name capture modal
 │   │   ├── LoadingSpinner.jsx     # Loading indicator
 │   │   ├── ErrorMessage.jsx       # Error display
 │   │   └── ...                    # Other common components (badges, etc)
@@ -108,7 +116,8 @@ src/
 └── utils/
     ├── constants.js               # Configuration (weights, status, categories)
     ├── calculations.js            # Pure functions for score calculations
-    └── dataTransformer.js         # API data transformation and normalization
+    ├── dataTransformer.js         # API data transformation and normalization
+    └── sessionStorage.js          # User session management (localStorage)
 ```
 
 **Data Flow:**
@@ -126,6 +135,14 @@ src/
 3. Triggers `onRegistrationComplete()` callback → calls `refetch()`
 4. `refetch()` bypasses cache and fetches fresh data from API
 5. React re-renders with new data → table updates, chat stays open
+
+**User Session Flow:**
+1. App loads → `getUserName()` checks localStorage
+2. If no name → `UserIdentification` modal appears
+3. User enters name → saved to localStorage → modal closes
+4. `N8nChat` renders with personalized title and metadata
+5. All messages include `{ userName, sessionId, timestamp }` in metadata
+6. Next session → name loaded from localStorage → skip modal
 
 ## Critical Business Logic
 
@@ -254,6 +271,7 @@ All documentation is organized in the `/docs` folder:
 - `docs/QUICK_START.md` - Practical guide for adding features
 - `docs/SORTING_FEATURE.md` - Table sorting and filter reset functionality guide
 - `docs/CHAT_INTEGRATION.md` - n8n chat assistant integration guide (auto-refresh, customization)
+- `docs/USER_SESSION.md` - User identification and session persistence system (localStorage, metadata)
 - `docs/DEPLOY.md` - Production deployment guide (Easypanel, Docker, Build Arguments)
 - `docs/dev-docs.md` - Original technical documentation, includes future backend schema
 - `docs/INSTALL.md` - Installation and setup guide

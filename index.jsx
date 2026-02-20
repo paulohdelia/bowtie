@@ -5,15 +5,27 @@ import ActionTable from './src/components/layout/ActionTable';
 import LoadingSpinner from './src/components/common/LoadingSpinner';
 import ErrorMessage from './src/components/common/ErrorMessage';
 import N8nChat from './src/components/common/N8nChat';
+import UserIdentification from './src/components/common/UserIdentification';
 import { useBowTieData } from './src/hooks/useBowTieData';
 import { useSprintsData } from './src/hooks/useSprintsData';
 import { useBowTieCalculations } from './src/hooks/useBowTieCalculations';
 import { useFilters, useTableData } from './src/hooks/useFilters';
 import { useRecommendedActions } from './src/hooks/useRecommendedActions';
+import { getUserName } from './src/utils/sessionStorage';
 
 const BowTieApp = () => {
   const [activeStage, setActiveStage] = useState(null);
+  const [userName, setUserName] = useState(null);
   const detailsRef = useRef(null);
+
+  // Carregar nome do usuário do localStorage na montagem
+  useEffect(() => {
+    const savedName = getUserName();
+    if (savedName) {
+      console.log('[BowTieApp] Nome do usuário carregado:', savedName);
+      setUserName(savedName);
+    }
+  }, []);
 
   // Hooks de dados e lógica de negócio
   const { bowTieData, loading, error, refetch } = useBowTieData();
@@ -124,8 +136,18 @@ const BowTieApp = () => {
         detailsRef={detailsRef}
       />
 
-      {/* Chat Assistente n8n */}
-      <N8nChat onRegistrationComplete={refetch} />
+      {/* Identificação de usuário (só mostra se nome não existe) */}
+      {!userName && (
+        <UserIdentification onNameSubmit={setUserName} />
+      )}
+
+      {/* Chat Assistente n8n (só funciona quando há nome) */}
+      {userName && (
+        <N8nChat
+          onRegistrationComplete={refetch}
+          userName={userName}
+        />
+      )}
     </div>
   );
 };

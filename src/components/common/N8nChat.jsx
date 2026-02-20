@@ -2,8 +2,9 @@ import { useEffect, useRef } from 'react';
 import '@n8n/chat/style.css';
 import '../../styles/n8n-chat-custom.css';
 import { createChat } from '@n8n/chat';
+import { getSessionId } from '../../utils/sessionStorage';
 
-const N8nChat = ({ onRegistrationComplete }) => {
+const N8nChat = ({ onRegistrationComplete, userName }) => {
   const chatInstanceRef = useRef(null);
   const onRegistrationCompleteRef = useRef(onRegistrationComplete);
   const hasDetectedCompletionRef = useRef(false);
@@ -26,9 +27,14 @@ const N8nChat = ({ onRegistrationComplete }) => {
       showWelcomeScreen: false,
       loadPreviousSession: true,
       enableStreaming: false,
+      metadata: {
+        userName: userName || 'Anônimo',
+        sessionId: getSessionId(),
+        timestamp: new Date().toISOString(),
+      },
       i18n: {
         en: {
-          title: 'Ferraz Piai Assistant',
+          title: userName ? `Olá, ${userName}!` : 'Ferraz Piai Assistant',
           subtitle: 'Estou aqui para te ajudar a classificar os problemas e adicioná-los ao backlog',
           footer: '',
           getStarted: 'Nova Conversa',
