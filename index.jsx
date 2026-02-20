@@ -1,11 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Header from './src/components/layout/Header';
 import BowTieContainer from './src/components/bowtie/BowTieContainer';
 import ActionTable from './src/components/layout/ActionTable';
 import LoadingSpinner from './src/components/common/LoadingSpinner';
 import ErrorMessage from './src/components/common/ErrorMessage';
 import N8nChat from './src/components/common/N8nChat';
-import DebugPanel from './src/components/common/DebugPanel';
 import { useBowTieData } from './src/hooks/useBowTieData';
 import { useSprintsData } from './src/hooks/useSprintsData';
 import { useBowTieCalculations } from './src/hooks/useBowTieCalculations';
@@ -46,6 +45,20 @@ const BowTieApp = () => {
   );
 
   const recommendedActionIds = useRecommendedActions(bowTieData, bottleneckStageId);
+
+  // Auto-switch to "all" when selected sprint has no items
+  useEffect(() => {
+    // Só aplica se não for "all" ou "backlog" e se houver dados
+    if (selectedSprint !== 'all' && selectedSprint !== 'backlog' && bowTieData.length > 0) {
+      // Verificar se a sprint selecionada tem ações
+      const hasActions = tableData.length > 0;
+
+      if (!hasActions) {
+        console.log(`[Auto-Switch] Sprint "${selectedSprint}" sem ações. Alternando para "Visão Geral"`);
+        setSelectedSprint('all');
+      }
+    }
+  }, [selectedSprint, tableData.length, bowTieData.length, setSelectedSprint]);
 
   // Handlers
   const handleStageClick = (id) => {
@@ -113,13 +126,6 @@ const BowTieApp = () => {
 
       {/* Chat Assistente n8n */}
       <N8nChat onRegistrationComplete={refetch} />
-
-      {/* Debug Panel (temporary) */}
-      <DebugPanel
-        recommendedActionIds={recommendedActionIds}
-        tableData={tableData}
-        bottleneckStageId={bottleneckStageId}
-      />
     </div>
   );
 };
