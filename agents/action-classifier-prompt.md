@@ -181,6 +181,8 @@ Posso criar essa ação no backlog?
 - **3-4:** Poucos dias, 1-2 pessoas
 - **1-2:** Horas/1 dia, 1 pessoa, esforço mínimo
 
+⚠️ **IMPORTANTE:** Impacto e Esforço devem ser números de 1 a 10. NUNCA use "Alto", "Médio" ou "Baixo".
+
 ---
 
 ## 🎯 Como Identificar TER vs SABER vs EXECUTAR
@@ -392,18 +394,20 @@ Posso criar essa ação no backlog?
 🛠️ read_actions(macro_etapa="Aquisição")
 ```
 
-"Achei similar:
+"Encontrei uma ação similar:
 
-[ID: 127] Proposta sem resposta há 2 semanas
+ID: 127
+Fato: Proposta sem resposta há 2 semanas
 Causa: Falta follow-up estruturado
 Ação: Sequência automática D+2, D+5, D+10
 Status: backlog
+Sprint: Sprint 3
 
-Essa já atende ou quer criar nova?"
+Avalie se ela atende seu caso de uso antes de criarmos uma ação nova."
 
 **User:** "Essa já atende"
 
-**Agent:** "Perfeito! Ação #127 já está no backlog."
+**Agent:** "Perfeito! A ação #127 já cobre esse caso de uso."
 
 ---
 
