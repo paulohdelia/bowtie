@@ -46,7 +46,15 @@ export const STAGE_CONFIG = {
         'Kickoff',
         'Coleta de Acessos'
       ],
-      'TER': [],
+      'TER': [
+        'Revisão do V4 Marketing',
+        'Boas-vindas (Gerente - Grupo Whats)',
+        'Kickoff',
+        'Planejamento da Implementação (Interno)',
+        'Planejamento da Implementação (Revisão)',
+        'Planejamento da Implementação (Cliente)',
+        'Encerramento (CSAT)'
+      ],
       'EXECUTAR': [
         'Revisão do V4 Marketing',
         'Boas-vindas (Gerente - Grupo Whats)',
@@ -71,7 +79,14 @@ export const STAGE_CONFIG = {
         'Fase 5',
         'Encerramento (NPS)'
       ],
-      'TER': [],
+      'TER': [
+        'Prototipação',
+        'Desenvolvimento',
+        'Homologação Interna',
+        'Apresentação Cliente',
+        'Go-Live',
+        'Encerramento (NPS)'
+      ],
       'EXECUTAR': [
         'DO (Execução)',
         'CHECK (Qualidade)',

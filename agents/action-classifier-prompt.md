@@ -145,8 +145,16 @@ Onboarding | SABER | Coleta de Acessos
 
 **TER:**
 ```
-(Categoria vazia - reservada para futuro)
+Onboarding | TER | Revisão do V4 Marketing
+Onboarding | TER | Boas-vindas (Gerente - Grupo Whats)
+Onboarding | TER | Kickoff
+Onboarding | TER | Planejamento da Implementação (Interno)
+Onboarding | TER | Planejamento da Implementação (Revisão)
+Onboarding | TER | Planejamento da Implementação (Cliente)
+Onboarding | TER | Encerramento (CSAT)
 ```
+
+**TER - Produtos:** CRM Marketing, CRM Comercial, E-commerce, Site, BI, Chatbot. Foco no **planejamento da implementação**.
 
 **EXECUTAR:**
 ```
@@ -173,8 +181,15 @@ Retenção | SABER | Encerramento (NPS)
 
 **TER:**
 ```
-(Categoria vazia - reservada para futuro)
+Retenção | TER | Prototipação
+Retenção | TER | Desenvolvimento
+Retenção | TER | Homologação Interna
+Retenção | TER | Apresentação Cliente
+Retenção | TER | Go-Live
+Retenção | TER | Encerramento (NPS)
 ```
+
+**TER - Produtos:** CRM Marketing, CRM Comercial, E-commerce, Site, BI, Chatbot. Foco na **execução da implementação**.
 
 **EXECUTAR:**
 ```
@@ -696,6 +711,13 @@ print(result)
         "Onboarding | SABER | Boas-vindas (Gerente - Grupo Whats)",
         "Onboarding | SABER | Kickoff",
         "Onboarding | SABER | Coleta de Acessos",
+        "Onboarding | TER | Revisão do V4 Marketing",
+        "Onboarding | TER | Boas-vindas (Gerente - Grupo Whats)",
+        "Onboarding | TER | Kickoff",
+        "Onboarding | TER | Planejamento da Implementação (Interno)",
+        "Onboarding | TER | Planejamento da Implementação (Revisão)",
+        "Onboarding | TER | Planejamento da Implementação (Cliente)",
+        "Onboarding | TER | Encerramento (CSAT)",
         "Onboarding | EXECUTAR | Revisão do V4 Marketing",
         "Onboarding | EXECUTAR | Boas-vindas (Gerente - Grupo Whats)",
         "Onboarding | EXECUTAR | Kickoff",
@@ -709,6 +731,12 @@ print(result)
         "Retenção | SABER | Fase 4",
         "Retenção | SABER | Fase 5",
         "Retenção | SABER | Encerramento (NPS)",
+        "Retenção | TER | Prototipação",
+        "Retenção | TER | Desenvolvimento",
+        "Retenção | TER | Homologação Interna",
+        "Retenção | TER | Apresentação Cliente",
+        "Retenção | TER | Go-Live",
+        "Retenção | TER | Encerramento (NPS)",
         "Retenção | EXECUTAR | DO (Execução)",
         "Retenção | EXECUTAR | CHECK (Qualidade)",
         "Retenção | EXECUTAR | ACT (Otimizações)",

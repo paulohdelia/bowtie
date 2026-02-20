@@ -22,7 +22,7 @@ As etapas **Onboarding** e **Retenção** utilizam um sistema de **categorias** 
 | **Etapas Simples** | 5 (Exposição, Pré-Venda, Aquisição, Commit, Expansão) |
 | **Etapas Categorizadas** | 2 (Onboarding, Retenção) |
 | **Categorias** | 3 (SABER, TER, EXECUTAR) |
-| **Total de Micro-Etapas** | ~50 |
+| **Total de Micro-Etapas** | ~64 |
 | **Etapa Central (Nó)** | Commit |
 | **Lado Esquerdo (Pré-venda)** | 2 etapas |
 | **Lado Direito (Pós-venda)** | 4 etapas |
@@ -111,8 +111,16 @@ As etapas **Onboarding** e **Retenção** utilizam um sistema de **categorias** 
 3. **Kickoff** - Reunião de kickoff com o cliente
 4. **Coleta de Acessos** - Coleta de credenciais e acessos necessários
 
-##### **TER** (0 micro-etapas)
-*Categoria vazia, reservada para futuro uso*
+##### **TER** (7 micro-etapas)
+1. **Revisão do V4 Marketing** - Revisão do documento de marketing
+2. **Boas-vindas (Gerente - Grupo Whats)** - Mensagem de boas-vindas do gerente
+3. **Kickoff** - Reunião de kickoff + levantamento de requisitos
+4. **Planejamento da Implementação (Interno)** - Planejamento interno do projeto
+5. **Planejamento da Implementação (Revisão)** - Revisão interna do planejamento
+6. **Planejamento da Implementação (Cliente)** - Apresentação ao cliente
+7. **Encerramento (CSAT)** - Finalização com pesquisa de satisfação
+
+> **Produtos TER**: CRM Marketing, CRM Comercial, E-commerce, Site, BI, Chatbot. São produtos de implementação com início, meio e fim definidos. O Onboarding foca no **planejamento da implementação**.
 
 ##### **EXECUTAR** (8 micro-etapas)
 1. **Revisão do V4 Marketing** - Revisão do documento de marketing
@@ -144,8 +152,15 @@ As etapas **Onboarding** e **Retenção** utilizam um sistema de **categorias** 
 4. **Fase 5** - Quinta fase do diagnóstico
 5. **Encerramento (NPS)** - Finalização com pesquisa NPS
 
-##### **TER** (0 micro-etapas)
-*Categoria vazia, reservada para futuro uso*
+##### **TER** (6 micro-etapas)
+1. **Prototipação** - Criação de MVP/protótipo
+2. **Desenvolvimento** - Implementação completa
+3. **Homologação Interna** - Testes de QA
+4. **Apresentação Cliente** - Demo e treinamento
+5. **Go-Live** - Publicação em produção
+6. **Encerramento (NPS)** - Finalização com pesquisa NPS
+
+> **Produtos TER**: CRM Marketing, CRM Comercial, E-commerce, Site, BI, Chatbot. A Retenção foca na **execução da implementação**. Após o Go-Live, o projeto TER é concluído.
 
 ##### **EXECUTAR** (6 micro-etapas)
 1. **DO (Execução)** - Executar as ações planejadas
@@ -185,7 +200,7 @@ As etapas **Onboarding** e **Retenção** utilizam um sistema de **categorias** 
      ↑            ↑             ↑            ⚡              ↓                  ↓              ↓
     h-40         h-80          h-64         h-48           h-96               h-96           h-96
   (0 micro)    (5 micro)     (5 micro)   (7 micro)      (3 categorias)    (3 categorias)  (6 micro)
-                                                         12 micro total     11 micro total
+                                                         19 micro total     17 micro total
 ```
 
 ### Legenda:
@@ -274,8 +289,8 @@ Sistema de normalização que aceita variações de grafia (acentuação, case, 
 | Pré-Venda | prevenda | Simples | 5 | - | h-80 |
 | Aquisição | aquisicao | Simples | 5 | - | h-64 |
 | Commit | commit | Simples (Nó) | 7 | - | h-48 |
-| Onboarding | onboarding | Categorizada | 12 | SABER (4), TER (0), EXECUTAR (8) | h-96 |
-| Retenção | retencao | Categorizada | 11 | SABER (5), TER (0), EXECUTAR (6) | h-96 |
+| Onboarding | onboarding | Categorizada | 19 | SABER (4), TER (7), EXECUTAR (8) | h-96 |
+| Retenção | retencao | Categorizada | 17 | SABER (5), TER (6), EXECUTAR (6) | h-96 |
 | Expansão | expansao | Simples | 6 | - | h-96 |
 
 ---
