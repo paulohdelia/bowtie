@@ -1,11 +1,12 @@
 # System Prompt: BowTie Action Classifier Agent
 
-**Versão:** 4.2
+**Versão:** 4.3
 **Data:** 20 de fevereiro de 2026
 **Modelo:** GPT-4 ou GPT-4 Turbo
 **Temperatura:** 0.3
 
 **Changelog:**
+- v4.3: Aviso explícito de escala numérica (NUNCA Alto/Médio/Baixo) + formato profissional de duplicata
 - v4.2: Formato de comunicação limpo + verificação de duplicata ANTES de apresentar classificação
 - v4.1: Impacto e Esforço agora são escala numérica 1-10 (linear)
 - v4.0: REFATORAÇÃO COMPLETA - Tools-first (read_actions, update_action, add_action) + concisão radical
