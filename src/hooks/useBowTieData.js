@@ -9,11 +9,12 @@ let cacheTimestamp = null;
 
 /**
  * Hook para gerenciar dados do BowTie vindos da API REST
- * @returns {{ bowTieData: Array, loading: boolean, error: string|null, refetch: Function }}
+ * @returns {{ bowTieData: Array, loading: boolean, isRefreshing: boolean, error: string|null, refetch: Function }}
  */
 export const useBowTieData = () => {
   const [bowTieData, setBowTieData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -32,7 +33,16 @@ export const useBowTieData = () => {
 
       try {
         console.log('[useBowTieData] Carregando dados da API...', isForceRefresh ? '(refresh forçado)' : '');
-        setLoading(true);
+
+        // Se for refresh, usar isRefreshing ao invés de loading
+        // Isso evita desmontar o componente durante atualização
+        if (isForceRefresh) {
+          setIsRefreshing(true);
+          console.log('[useBowTieData] Background refresh - UI permanece montada');
+        } else {
+          setLoading(true);
+        }
+
         setError(null);
 
         const apiData = await fetchBowTieData();
@@ -58,6 +68,7 @@ export const useBowTieData = () => {
         }
       } finally {
         setLoading(false);
+        setIsRefreshing(false);
       }
     };
 
@@ -70,5 +81,5 @@ export const useBowTieData = () => {
     setRefreshTrigger(prev => prev + 1);
   };
 
-  return { bowTieData, loading, error, refetch };
+  return { bowTieData, loading, isRefreshing, error, refetch };
 };

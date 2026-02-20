@@ -28,7 +28,7 @@ const BowTieApp = () => {
   }, []);
 
   // Hooks de dados e lógica de negócio
-  const { bowTieData, loading, error, refetch } = useBowTieData();
+  const { bowTieData, loading, isRefreshing, error, refetch } = useBowTieData();
   const { activeSprint, sprintsWithActions, loading: loadingSprints } = useSprintsData(bowTieData);
   const {
     selectedSprint,
@@ -100,6 +100,14 @@ const BowTieApp = () => {
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #E30613; }
       `}</style>
+
+      {/* Indicador de refresh em background */}
+      {isRefreshing && (
+        <div className="fixed top-4 right-4 z-40 bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 shadow-lg flex items-center gap-3 animate-fade-in">
+          <div className="w-4 h-4 border-2 border-[#E30613] border-t-transparent rounded-full animate-spin"></div>
+          <span className="text-sm text-gray-300">Atualizando dados...</span>
+        </div>
+      )}
 
       <Header selectedSprint={selectedSprint} sprints={sprintsWithActions} />
 

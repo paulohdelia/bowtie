@@ -75,8 +75,9 @@ See `.env.example` for reference.
   - Floating button for easy access
   - Conversational problem classification
   - Automatic data refresh when "Registro concluído!" is detected
-  - Context preservation during refresh (chat stays open)
-  - See `docs/CHAT_INTEGRATION.md` for details
+  - **Background refresh without unmounting** (chat stays open, history preserved)
+  - Visual indicator during data updates
+  - See `docs/CHAT_INTEGRATION.md` and `docs/CHAT_REFRESH_FIX.md` for details
 - **User Session**: Persistent user identification system
   - Modal on first access to capture user name
   - localStorage persistence across sessions
@@ -133,8 +134,11 @@ src/
 1. User sends problem via chat → n8n processes and responds
 2. MutationObserver detects "Registro concluído!" message
 3. Triggers `onRegistrationComplete()` callback → calls `refetch()`
-4. `refetch()` bypasses cache and fetches fresh data from API
-5. React re-renders with new data → table updates, chat stays open
+4. `refetch()` sets `isRefreshing=true` (NOT `loading=true`)
+5. Background fetch executes → app stays mounted, chat preserved
+6. Visual indicator shows "Atualizando dados..." in top-right
+7. Data updates → React re-renders affected components only
+8. Table updates, chat stays open with full history preserved
 
 **User Session Flow:**
 1. App loads → `getUserName()` checks localStorage
@@ -271,6 +275,7 @@ All documentation is organized in the `/docs` folder:
 - `docs/QUICK_START.md` - Practical guide for adding features
 - `docs/SORTING_FEATURE.md` - Table sorting and filter reset functionality guide
 - `docs/CHAT_INTEGRATION.md` - n8n chat assistant integration guide (auto-refresh, customization)
+- `docs/CHAT_REFRESH_FIX.md` - Fix for chat closing during data refresh (background refresh implementation)
 - `docs/USER_SESSION.md` - User identification and session persistence system (localStorage, metadata)
 - `docs/DEPLOY.md` - Production deployment guide (Easypanel, Docker, Build Arguments)
 - `docs/dev-docs.md` - Original technical documentation, includes future backend schema
