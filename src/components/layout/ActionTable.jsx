@@ -367,20 +367,28 @@ const ActionTable = ({
                   </td>
                   <td className="p-4 whitespace-nowrap text-center text-xs font-mono">{action.deadline}</td>
                   <td className="p-4 whitespace-nowrap">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-[10px] font-bold text-gray-400">
-                        {action.responsible ? action.responsible.charAt(0) : '?'}
+                    {action.responsible ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-[10px] font-bold text-gray-400">
+                          {action.responsible.charAt(0)}
+                        </div>
+                        {action.responsible}
                       </div>
-                      {action.responsible || '-'}
-                    </div>
+                    ) : (
+                      <span className="text-gray-600">-</span>
+                    )}
                   </td>
                   <td className="p-4 whitespace-nowrap">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-[10px] font-bold text-gray-300">
-                        {action.identifiedBy ? action.identifiedBy.charAt(0) : '?'}
+                    {action.identifiedBy ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-[10px] font-bold text-gray-300">
+                          {action.identifiedBy.charAt(0)}
+                        </div>
+                        {action.identifiedBy}
                       </div>
-                      {action.identifiedBy || '-'}
-                    </div>
+                    ) : (
+                      <span className="text-gray-600">-</span>
+                    )}
                   </td>
                   <td className="p-4 whitespace-nowrap">
                     <CategoryBadge category={action.category} />
