@@ -352,7 +352,7 @@ const ActionTable = ({
                     <StatusBadge status={action.status} />
                   </td>
                   <td className="p-4 max-w-xs font-medium text-white align-top">
-                    <div className="flex items-start gap-2">
+                    <div className="flex items-start gap-2 min-w-0 w-full">
                       {recommendedActionIds?.includes(action.id) && (
                         <Star
                           size={16}
@@ -360,9 +360,11 @@ const ActionTable = ({
                           title="Ação Recomendada: Alto impacto, baixo esforço e/ou na trava"
                         />
                       )}
-                      <ExpandableCell>
-                        {action.action}
-                      </ExpandableCell>
+                      <div className="flex-1 min-w-0">
+                        <ExpandableCell>
+                          {action.action}
+                        </ExpandableCell>
+                      </div>
                     </div>
                   </td>
                   <td className="p-4 whitespace-nowrap text-center text-xs font-mono">{action.deadline}</td>

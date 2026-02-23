@@ -9,9 +9,9 @@ const ExpandableCell = ({ children, className = "" }) => {
   const isLongText = children.length > 80; // Only show expand for long text
 
   return (
-    <div className={`${className}`}>
+    <div className={`w-full ${className}`}>
       <div
-        className={`${isExpanded ? 'whitespace-normal' : 'truncate'} transition-all duration-200`}
+        className={`${isExpanded ? 'whitespace-normal break-words' : 'truncate'} transition-all duration-200`}
       >
         {children}
       </div>
