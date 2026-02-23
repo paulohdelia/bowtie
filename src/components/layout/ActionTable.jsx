@@ -3,7 +3,7 @@ import { Filter, Calendar, ChevronDown, CheckSquare, Square, Target, User, Arrow
 import StatusBadge from '../common/StatusBadge';
 import SprintBadge from '../common/SprintBadge';
 import CategoryBadge from '../common/CategoryBadge';
-import ExpandableCell from '../common/ExpandableCell';
+import Tooltip from '../common/Tooltip';
 import { STATUS_CONFIG } from '../../utils/constants';
 import { useSorting } from '../../hooks/useSorting';
 
@@ -351,20 +351,18 @@ const ActionTable = ({
                   <td className="p-4 whitespace-nowrap">
                     <StatusBadge status={action.status} />
                   </td>
-                  <td className="p-4 max-w-xs font-medium text-white align-top">
-                    <div className="flex items-start gap-2 min-w-0 w-full">
+                  <td className="p-4 max-w-xs font-medium text-white">
+                    <div className="flex items-center gap-2 min-w-0">
                       {recommendedActionIds?.includes(action.id) && (
                         <Star
                           size={16}
-                          className="text-yellow-400 fill-yellow-400 flex-shrink-0 mt-0.5"
+                          className="text-yellow-400 fill-yellow-400 flex-shrink-0"
                           title="Ação Recomendada: Alto impacto, baixo esforço e/ou na trava"
                         />
                       )}
-                      <div className="flex-1 min-w-0">
-                        <ExpandableCell>
-                          {action.action}
-                        </ExpandableCell>
-                      </div>
+                      <Tooltip content={action.action}>
+                        {action.action}
+                      </Tooltip>
                     </div>
                   </td>
                   <td className="p-4 whitespace-nowrap text-center text-xs font-mono">{action.deadline}</td>
@@ -390,15 +388,15 @@ const ActionTable = ({
                   <td className="p-4 text-xs uppercase font-bold text-gray-500">
                     {action.categoryName ? `${action.categoryName} | ${action.microStepName}` : action.microStepName}
                   </td>
-                  <td className="p-4 max-w-xs align-top">
-                    <ExpandableCell>
+                  <td className="p-4 max-w-xs">
+                    <Tooltip content={action.fact}>
                       {action.fact}
-                    </ExpandableCell>
+                    </Tooltip>
                   </td>
-                  <td className="p-4 max-w-xs align-top">
-                    <ExpandableCell>
+                  <td className="p-4 max-w-xs">
+                    <Tooltip content={action.cause}>
                       {action.cause}
-                    </ExpandableCell>
+                    </Tooltip>
                   </td>
                   <td className="p-4 text-center">
                     <span className={`text-lg font-bold ${
@@ -418,10 +416,10 @@ const ActionTable = ({
                       {action.effort || 0}
                     </span>
                   </td>
-                  <td className="p-4 max-w-sm text-gray-400 text-xs align-top">
-                    <ExpandableCell className="text-gray-400 text-xs">
-                      {action.comments}
-                    </ExpandableCell>
+                  <td className="p-4 max-w-sm text-gray-400 text-xs">
+                    <Tooltip content={action.comments} className="text-gray-400 text-xs">
+                      {action.comments || '-'}
+                    </Tooltip>
                   </td>
                 </tr>
               ))}
