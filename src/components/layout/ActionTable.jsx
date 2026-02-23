@@ -351,15 +351,15 @@ const ActionTable = ({
                   <td className="p-4 whitespace-nowrap">
                     <StatusBadge status={action.status} />
                   </td>
-                  <td className="p-4 max-w-xs font-medium text-white">
-                    <div className="flex items-center gap-2 min-w-0">
-                      {recommendedActionIds?.includes(action.id) && (
-                        <Star
-                          size={16}
-                          className="text-yellow-400 fill-yellow-400 flex-shrink-0"
-                          title="Ação Recomendada: Alto impacto, baixo esforço e/ou na trava"
-                        />
-                      )}
+                  <td className="p-4 max-w-xs font-medium text-white relative">
+                    {recommendedActionIds?.includes(action.id) && (
+                      <Star
+                        size={16}
+                        className="text-yellow-400 fill-yellow-400 absolute left-2 top-5"
+                        title="Ação Recomendada: Alto impacto, baixo esforço e/ou na trava"
+                      />
+                    )}
+                    <div className={recommendedActionIds?.includes(action.id) ? 'pl-6' : ''}>
                       <Tooltip content={action.action}>
                         {action.action}
                       </Tooltip>
