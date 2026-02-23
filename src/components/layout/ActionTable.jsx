@@ -3,6 +3,7 @@ import { Filter, Calendar, ChevronDown, CheckSquare, Square, Target, User, Arrow
 import StatusBadge from '../common/StatusBadge';
 import SprintBadge from '../common/SprintBadge';
 import CategoryBadge from '../common/CategoryBadge';
+import Tooltip from '../common/Tooltip';
 import { STATUS_CONFIG } from '../../utils/constants';
 import { useSorting } from '../../hooks/useSorting';
 
@@ -350,7 +351,7 @@ const ActionTable = ({
                   <td className="p-4 whitespace-nowrap">
                     <StatusBadge status={action.status} />
                   </td>
-                  <td className="p-4 max-w-xs truncate font-medium text-white group-hover:whitespace-normal relative" title={action.action}>
+                  <td className="p-4 max-w-xs font-medium text-white relative">
                     <div className="flex items-center gap-2">
                       {recommendedActionIds?.includes(action.id) && (
                         <Star
@@ -359,7 +360,9 @@ const ActionTable = ({
                           title="Ação Recomendada: Alto impacto, baixo esforço e/ou na trava"
                         />
                       )}
-                      <span className="truncate">{action.action}</span>
+                      <Tooltip content={action.action}>
+                        <span className="truncate block">{action.action}</span>
+                      </Tooltip>
                     </div>
                   </td>
                   <td className="p-4 whitespace-nowrap text-center text-xs font-mono">{action.deadline}</td>
@@ -385,8 +388,16 @@ const ActionTable = ({
                   <td className="p-4 text-xs uppercase font-bold text-gray-500">
                     {action.categoryName ? `${action.categoryName} | ${action.microStepName}` : action.microStepName}
                   </td>
-                  <td className="p-4 max-w-xs truncate group-hover:whitespace-normal" title={action.fact}>{action.fact}</td>
-                  <td className="p-4 max-w-xs truncate group-hover:whitespace-normal" title={action.cause}>{action.cause}</td>
+                  <td className="p-4 max-w-xs">
+                    <Tooltip content={action.fact}>
+                      <span className="truncate block">{action.fact}</span>
+                    </Tooltip>
+                  </td>
+                  <td className="p-4 max-w-xs">
+                    <Tooltip content={action.cause}>
+                      <span className="truncate block">{action.cause}</span>
+                    </Tooltip>
+                  </td>
                   <td className="p-4 text-center">
                     <span className={`text-lg font-bold ${
                       action.impact === 10 ? 'text-[#E30613]' :
@@ -405,8 +416,14 @@ const ActionTable = ({
                       {action.effort || 0}
                     </span>
                   </td>
-                  <td className="p-4 max-w-sm truncate group-hover:whitespace-normal text-gray-400 text-xs" title={action.comments}>
-                    {action.comments || '-'}
+                  <td className="p-4 max-w-sm text-gray-400 text-xs">
+                    {action.comments ? (
+                      <Tooltip content={action.comments}>
+                        <span className="truncate block">{action.comments}</span>
+                      </Tooltip>
+                    ) : (
+                      <span>-</span>
+                    )}
                   </td>
                 </tr>
               ))}
