@@ -27,7 +27,7 @@ const Tooltip = ({ children, content, className = "" }) => {
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
     >
-      <span ref={triggerRef} className={`truncate block cursor-help ${className}`}>
+      <span ref={triggerRef} className={`truncate block ${className}`}>
         {children}
       </span>
       {isVisible && (

@@ -19,15 +19,3 @@ export const CATEGORY_CONFIG = {
   'Processos': { color: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10' },
   'Tecnologia': { color: 'text-purple-400 border-purple-500/30 bg-purple-500/10' }
 };
-
-export const IMPACT_WEIGHTS = {
-  'Alto': 10,
-  'Médio': 5,
-  'Baixo': 1
-};
-
-export const EFFORT_WEIGHTS = {
-  'Alto': 10,
-  'Médio': 5,
-  'Baixo': 1
-};

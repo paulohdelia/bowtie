@@ -408,8 +408,8 @@ const ActionTable = ({
                   </td>
                   <td className="p-4 text-center">
                     <span className={`text-lg font-bold ${
-                      action.impact === 10 ? 'text-[#E30613]' :
-                      action.impact === 5 ? 'text-yellow-500' :
+                      action.impact >= 8 ? 'text-[#E30613]' :
+                      action.impact >= 5 ? 'text-yellow-500' :
                       'text-gray-500'
                     }`}>
                       {action.impact || 0}
@@ -417,8 +417,8 @@ const ActionTable = ({
                   </td>
                   <td className="p-4 text-center">
                     <span className={`text-lg font-bold ${
-                      action.effort === 10 ? 'text-[#E30613]' :
-                      action.effort === 5 ? 'text-yellow-500' :
+                      action.effort >= 8 ? 'text-[#E30613]' :
+                      action.effort >= 5 ? 'text-yellow-500' :
                       'text-green-500'
                     }`}>
                       {action.effort || 0}
