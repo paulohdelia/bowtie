@@ -42,7 +42,8 @@ export const useRecommendedActions = (bowTieData, bottleneckStageId) => {
     const backlogActions = allActions.filter(action =>
       (!action.sprint || action.sprint === '') &&
       action.status !== 'done' &&
-      action.status !== 'cancelled'
+      action.status !== 'cancelled' &&
+      action.status !== 'homologacao'
     );
 
     console.log('[useRecommendedActions] Backlog actions:', backlogActions.length);

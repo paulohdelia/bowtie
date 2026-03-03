@@ -10,6 +10,7 @@ export const STATUS_CONFIG = {
   backlog: { color: 'bg-gray-700 text-gray-300', label: 'Backlog' },
   todo: { color: 'bg-blue-900 text-blue-200', label: 'A Iniciar' },
   in_progress: { color: 'bg-yellow-900 text-yellow-200', label: 'Em Andamento' },
+  homologacao: { color: 'bg-purple-900 text-purple-200', label: 'Homologação' },
   done: { color: 'bg-green-900 text-green-200', label: 'Concluído' },
   cancelled: { color: 'bg-red-900 text-red-200', label: 'Cancelado' }
 };

@@ -4,7 +4,7 @@ import { normalizeMicroStepName } from './microStepMapping';
 /**
  * Normaliza o status da ação
  * @param {string} status - Status da ação vindo da API
- * @returns {string} Status normalizado: backlog | todo | in_progress | done | cancelled
+ * @returns {string} Status normalizado: backlog | todo | in_progress | homologacao | done | cancelled
  */
 const normalizeStatus = (status) => {
   if (!status) return 'backlog';
@@ -23,6 +23,9 @@ const normalizeStatus = (status) => {
     'em progresso': 'in_progress',
     'em andamento': 'in_progress',
     'andamento': 'in_progress',
+    'homologacao': 'homologacao',
+    'homologação': 'homologacao',
+    'homologar': 'homologacao',
     'done': 'done',
     'feito': 'done',
     'concluído': 'done',
